@@ -1,0 +1,28 @@
+#include <iostream>
+
+int main() {
+	int n, k;
+	int s = 0;
+	int num = 0;
+	int m = INT_MIN;
+	std::cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		std::cin >> k;
+		if ((k < 0) && (k % 7 == 0))
+		{
+			s += k;
+			if (k > m)
+			{
+				m = k;
+				num = i;
+			}
+		}
+	}
+	std::cout << s << std::endl;
+	std::cout << m << std::endl;
+	std::cout << num << std::endl;
+
+	system("pause");
+	return 0;
+}
