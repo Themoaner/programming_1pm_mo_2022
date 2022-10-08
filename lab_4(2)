@@ -1,0 +1,85 @@
+#include <iostream>
+
+int sumOfDigits(int x)
+{
+	int sum = 0;
+	while (x > 0)
+	{
+		sum += x % 10;
+		x /= 10;
+	}
+	return sum;
+}
+
+int productOfDigits(int x)
+{
+	int product = 1;
+	while (x > 0)
+	{
+		product *= x % 10;
+		x /= 10;
+	}
+	return product;
+}
+
+int main() {
+	int n;
+	std::cin >> n;
+	int mas[1005];
+	int masSum[1005];
+	int masProduct[1005];
+
+	for (int i = 0; i < n; i++)
+	{
+		std::cin >> mas[i];
+		masSum[i] = sumOfDigits(mas[i]);
+		masProduct[i] = productOfDigits(mas[i]);
+	}
+	
+	for (int i = 0; i < n - 1; i++)
+	{
+		for (int j = i + 1; j < n; j++)
+		{
+			if (masSum[i] > masSum[j])
+			{
+				std::swap(mas[i], mas[j]);
+				std::swap(masSum[i], masSum[j]);
+				std::swap(masProduct[i], masProduct[j]);
+			}
+		}
+	}
+	
+	for (int i = 0; i < n - 1; i++)
+	{
+		for (int j = i + 1; j < n; j++)
+		{
+			if ((masSum[i] == masSum[j]) && (masProduct[i] > masProduct[j]))
+			{
+				std::swap(mas[i], mas[j]);
+				std::swap(masSum[i], masSum[j]);
+				std::swap(masProduct[i], masProduct[j]);
+			}
+		}
+	}
+
+	for (int i = 0; i < n - 1; i++)
+	{
+		for (int j = i + 1; j < n; j++)
+		{
+			if ((masSum[i] == masSum[j]) && (masProduct[i] == masProduct[j]) && (mas[i] > mas[j]))
+			{
+				std::swap(mas[i], mas[j]);
+				std::swap(masSum[i], masSum[j]);
+				std::swap(masProduct[i], masProduct[j]);
+			}
+		}
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		std::cout << mas[i] << " " << std::endl;
+	}
+
+	system("pause");
+	return 0;
+}
