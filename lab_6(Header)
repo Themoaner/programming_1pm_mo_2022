@@ -1,16 +1,16 @@
 #pragma once
-#define N 100
-#define M 100
 
 namespace sk
 {
 
-	void read(int& n, int& m, int matrix[N][M]);
+	void read(int &n, int &m, int matrix[100][100]);
 
-	bool primeNumbers(int n, int m, int matrix[N][M]);
+	void primeNumbers(int n, int m, int matrix[100][100]);
 
-	int maxInMatrix(int n, int m, int matrix[N][M]);
+	void maxInMatrix(int n, int m, int matrix[100][100]);
 
-	void write(int n, int m, int matrix[N][M]);
+	void sort(int n, int m, int matrix[100][100]);
+
+	void write(int n, int m, int matrix[100][100]);
 }
 
