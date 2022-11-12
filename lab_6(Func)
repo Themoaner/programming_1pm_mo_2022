@@ -2,7 +2,7 @@
 #include "Header.h"
 
 namespace sk {
-    void read(int& n, int& m, int matrix[N][M])
+    void read(int &n, int &m, int matrix[100][100])
     {
         std::cin >> n >> m;
         for (int i = 0; i < n; i++)
@@ -12,7 +12,9 @@ namespace sk {
             }
     }
 
-    bool primeNumbers(int n, int m, int matrix[N][M])
+    int masPrime[100] = {0};
+
+    void primeNumbers(int n, int m, int matrix[100][100])
     {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++)
@@ -26,10 +28,15 @@ namespace sk {
                         break;
                     }
                 }
+                if (isPrime)
+                {
+                    masPrime[i]++;
+                }
             }
+        }
     }
 
-    int maxInMatrix(int n, int m, int matrix[N][M])
+    void maxInMatrix(int n, int m, int matrix[100][100])
     {
         int max = INT_MIN;
         int count = 0;
@@ -53,11 +60,29 @@ namespace sk {
         }
         if (count == 2)
         {
-
+            sort(n, m, matrix);
         }
     }
 
-    void write(int n, int m, int matrix[N][M])
+    void sort(int n, int m, int matrix[100][100]) 
+    {
+        for (int i = 0; i < n - 1; i++)
+        {
+            for (int j = i + 1; j < n; j++)
+            {
+                if (masPrime[i] < masPrime[j])
+                {
+                    std::swap(masPrime[i], masPrime[j]);
+                    for (int k = 0; k < m; k++)
+                    {
+                        std::swap(matrix[i][k], matrix[j][k]);
+                    }
+                }
+            }
+        }
+    }
+
+    void write(int n, int m, int matrix[100][100])
     {
         std::cout << std::endl;
         
