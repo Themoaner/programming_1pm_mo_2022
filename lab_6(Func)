@@ -20,6 +20,10 @@ namespace sk {
             for (int j = 0; j < m; j++)
             {
                 bool isPrime = true;
+                if (matrix[i][j] <= 1)
+                {
+                    isPrime = false;
+                }
                 for (int d = 2; d <= sqrt(matrix[i][j]); d++)
                 {
                     if (matrix[i][j] % d == 0)
@@ -31,8 +35,10 @@ namespace sk {
                 if (isPrime)
                 {
                     masPrime[i]++;
+                    std::cout << matrix[i][j] << " ";
                 }
             }
+            std::cout << masPrime[i] << std::endl;
         }
     }
 
@@ -61,6 +67,10 @@ namespace sk {
         if (count == 2)
         {
             sort(n, m, matrix);
+        }
+        if (count != 2)
+        {
+            std::cout << "ERROR";
         }
     }
 
