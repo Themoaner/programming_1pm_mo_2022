@@ -1,0 +1,9 @@
+#include <iostream>
+
+int main()
+{
+    unsigned int a;
+    std::cin >> a;
+    unsigned char* firstByte = (unsigned char*) &a;
+    std::cout << (int)*firstByte << std::endl << (int)*(firstByte + 1) << std::endl << (int)*(firstByte + 2) << std::endl << (int)*(firstByte + 3) << std::endl;
+}
