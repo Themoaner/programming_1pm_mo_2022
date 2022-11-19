@@ -2,8 +2,9 @@
 
 int main()
 {
-    unsigned int a;
-    std::cin >> a;
-    unsigned char* firstByte = (unsigned char*) &a;
-    std::cout << (int)*firstByte << std::endl << (int)*(firstByte + 1) << std::endl << (int)*(firstByte + 2) << std::endl << (int)*(firstByte + 3) << std::endl;
+	unsigned int a;
+	std::cin >> a;
+	unsigned char* firstByte = (unsigned char*)&a;
+	std::cout << (unsigned int)*firstByte << " " << (unsigned int)*(firstByte + 1) << " " << (unsigned int)*(firstByte + 2) << " " << (unsigned int)*(firstByte + 3) << std::endl;
+	system("pause");
 }
