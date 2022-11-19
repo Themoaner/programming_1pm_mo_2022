@@ -1,0 +1,91 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+void mas(std::string s, int numbers[1000])
+{
+	numbers[0] = s.length();
+	for (int i = 0; i < s.length(); i++)
+	{
+		numbers[i + 1] = s[i] - '0';
+	}
+	for (int i = 1; i <= numbers[0] / 2; i++)
+	{
+		std::swap(numbers[i], numbers[numbers[0] - i + 1]);
+	}
+}
+
+void sum(int n1[1000], int n2[1000], int res[1000])
+{
+	int p = 0;
+	if (n1[0] >= n2[0])
+		res[0] = n1[0];
+	else res[0] = n2[0];
+	for (int i = 1; i <= res[0]; i++)
+	{
+		res[i] = n1[i] + n2[i] + p;
+		p = res[i] / 10;
+		res[i] %= 10;
+		std::cout << res[i] << std::endl;
+	}
+	if (p > 0)
+	{
+		res[0] += 1;
+		res[res[0]] = p;
+	}
+}
+
+void r(int res[1000])
+{
+	for (int i = 1; i <= res[0] / 2; i++)
+	{
+		std::swap(res[i], res[res[0] - i + 1]);
+	}
+}
+
+void mult(int n1[1000], int n2[1000], int res[1000])
+{
+	int p = 0;
+	res[0] = n1[0] + n2[0] - 1;
+	for (int i = 1; i <= res[0]; i++)
+	{
+		res[i] = n1[i] * n2[i] + p;
+		p = res[i] / 10;
+		res[i] %= 10;
+		std::cout << res[i] << std::endl;
+	}
+
+}
+
+int main()
+{
+	std::ifstream fin("input.txt");
+	std::ofstream fout("output.txt");
+	std::string str1,str2;
+	fin >> str1 >> str2;
+	int numbers1[1000] = { 0 }, numbers2[1000] = { 0 }, result[1000] = { 0 };
+
+	mas(str1, numbers1);
+	mas(str2, numbers2);
+	for (int i = 1; i <= numbers1[0]; i++)
+	{
+		std::cout << numbers1[i];
+	}
+	std::cout << std::endl;
+
+	for (int i = 1; i <= numbers2[0]; i++)
+	{
+		std::cout << numbers2[i];
+	}
+	std::cout << std::endl;
+
+	sum(numbers1, numbers2, result);
+	r(result);
+	for (int i = 1; i <= result[0]; i++)
+	{
+		std::cout << result[i];
+	}
+	std::cout << std::endl;
+
+	system("pause");
+}
