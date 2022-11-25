@@ -1,0 +1,37 @@
+#include <iostream>
+
+class cube
+{
+private:
+    double m_edge = 0;
+    double m_volume = 0;
+
+public:
+    cube(double edge)
+    {
+        m_edge = edge;
+    }
+
+    bool SetEdgeOfCube(double edge)
+    {
+        if (edge <= 0)
+        {
+            std::cout << "Error" << std::endl;
+            return false;
+        }
+        m_edge = edge;
+        m_volume = pow(m_edge, 3);
+    }
+
+    double volume()
+    {
+        return m_volume;
+    }
+};
+
+int main()
+{
+    cube cube1(5);
+    cube1.SetEdgeOfCube(5);
+    std::cout << cube1.volume();
+}
