@@ -3,35 +3,45 @@
 class cube
 {
 private:
-    double m_edge = 0;
-    double m_volume = 0;
+	double m_edge = 0;
+	double m_volume = 0;
 
 public:
-    cube(double edge)
-    {
-        m_edge = edge;
-    }
 
-    bool SetEdgeOfCube(double edge)
-    {
-        if (edge <= 0)
-        {
-            std::cout << "Error" << std::endl;
-            return false;
-        }
-        m_edge = edge;
-        m_volume = pow(m_edge, 3);
-    }
+	cube();
 
-    double volume()
-    {
-        return m_volume;
-    }
+	cube(double edge)
+	{
+		if (edge <= 0)
+		{
+			std::cout << "Error" << std::endl;
+			return;
+		}
+		m_edge = edge;
+	}
+
+	void cube::SetEdgeOfCube(double edge)
+	{
+		if (edge <= 0)
+		{
+			std::cout << "Error" << std::endl;
+			return;
+		}
+		m_edge = edge;
+	}
+
+	double volume()
+	{
+		m_volume = pow(m_edge, 3);
+		return m_volume;
+	}
 };
 
 int main()
 {
-    cube cube1(5);
-    cube1.SetEdgeOfCube(5);
-    std::cout << cube1.volume();
+	cube cube1(5);
+	//cube cube1 = cube();
+	//cube1.SetEdgeOfCube(5);
+	std::cout << cube1.volume();
+	system("pause");
 }
