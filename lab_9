@@ -8,7 +8,7 @@ private:
 
 public:
 
-	cube();
+	cube() {};
 
 	cube(double edge)
 	{
@@ -20,7 +20,7 @@ public:
 		m_edge = edge;
 	}
 
-	void cube::SetEdgeOfCube(double edge)
+	void SetEdgeOfCube(double edge)
 	{
 		if (edge <= 0)
 		{
