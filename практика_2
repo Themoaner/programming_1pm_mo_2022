@@ -26,7 +26,7 @@ void sum(int n1[1000], int n2[1000], int res[1000])
 		res[i] = n1[i] + n2[i] + p;
 		p = res[i] / 10;
 		res[i] %= 10;
-		std::cout << res[i] << std::endl;
+		//std::cout << res[i] << std::endl;
 	}
 	if (p > 0)
 	{
@@ -46,24 +46,27 @@ void r(int res[1000])
 void mult(int n1[1000], int n2[1000], int res[1000])
 {
 	int p = 0;
-	res[0] = n1[0] + n2[0] - 1;
-	for (int i = 1; i <= res[0]; i++)
+	res[0] = n1[0] + n2[0];
+	for (int i = 1; i <= n1[0]; i++)
 	{
-		res[i] = n1[i] * n2[i] + p;
-		p = res[i] / 10;
-		res[i] %= 10;
-		std::cout << res[i] << std::endl;
+		for (int j = 1; j <= n2[0]; j++)
+		{
+			res[i + j - 1] += n1[i] * n2[j];
+			//std::cout << res[i + j - 1] << std::endl;
+			p = res[i + j - 1] / 10;
+			res[i + j - 1] %= 10;
+			res[i + j] += p;
+		}
 	}
-
 }
 
 int main()
 {
 	std::ifstream fin("input.txt");
 	std::ofstream fout("output.txt");
-	std::string str1,str2;
+	std::string str1, str2;
 	fin >> str1 >> str2;
-	int numbers1[1000] = { 0 }, numbers2[1000] = { 0 }, result[1000] = { 0 };
+	int numbers1[1000] = { 0 }, numbers2[1000] = { 0 }, result[1000] = { 0 }, resultMult[1000] = {0};
 
 	mas(str1, numbers1);
 	mas(str2, numbers2);
@@ -84,6 +87,22 @@ int main()
 	for (int i = 1; i <= result[0]; i++)
 	{
 		std::cout << result[i];
+	}
+	std::cout << std::endl;
+
+	mult(numbers1, numbers2, resultMult);
+	r(resultMult);
+	if (resultMult[1] == 0)
+	{
+		for (int i = 1; i <= resultMult[0]; i++)
+		{
+			std::swap(resultMult[i], resultMult[i + 1]);
+		}
+		resultMult[0] -= 1;
+	}
+	for (int i = 1; i <= resultMult[0]; i++)
+	{
+		std::cout << resultMult[i];
 	}
 	std::cout << std::endl;
 
