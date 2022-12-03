@@ -14,7 +14,7 @@ int main()
 						for (int e = 0; e <= 9; e++) {
 							int a = i + j + k;
 							int b = q + w + e;
-							if ((a % 10 + a / 10) == (b % 10 + b / 10))
+							if (((a % 10) + (a / 10)) == ((b % 10) + (b / 10)))
 							{
 								fake += 1;
 							}
