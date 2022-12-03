@@ -1,0 +1,38 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+int main()
+{
+	double happy = 0;
+	double fake = 0;
+	for (int i = 0; i <= 9; i++) {
+		for (int j = 0; j <= 9; j++) {
+			for (int k = 0; k <= 9; k++) {
+				for (int q = 0; q <= 9; q++) {
+					for (int w = 0; w <= 9; w++) {
+						for (int e = 0; e <= 9; e++) {
+							int a = i + j + k;
+							int b = q + w + e;
+							if ((a % 10 + a / 10) == (b % 10 + b / 10))
+							{
+								fake += 1;
+							}
+							if (i + j + k == q + w + e)
+							{
+								happy += 1;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	double pr_h = happy / 1000000;
+	double pr_f = fake / 1000000;
+	double d = fake / happy;
+	double r = pr_f - pr_h;
+
+	std::cout << "ratio: " << d << std::endl << "difference: " << r << std::endl;
+	system("pause");
+}
