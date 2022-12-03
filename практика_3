@@ -63,10 +63,10 @@ int main()
 	}
 
 
-	/*for (int i = 0; i < N; i++)
+	for (int i = 0; i < size; i++)
 	{
-		fout << word[i] << " " << count[i] << std::endl;
+		fout << word[i] << " " << Letters[i] << std::endl;
 	}
-	*/
+	
 	system("pause");
 }
