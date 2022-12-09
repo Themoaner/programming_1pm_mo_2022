@@ -18,13 +18,14 @@ int main()
 	std::string str;
 	//std::string alphabet = "абвгдеёжзиклмнопрстуфхцчшщъыьэюя";
 	std::string alphabet = "abcdefghijklmnopqrstuvwxyz";
-	std::string word[1000], Letters[1000];
-	
-	int size = 0;
+	//std::string word[1000], Letters[1000];
+
 
 	while (fin >> str)
 	{
-		std::string letters = "(";
+		std::string p = str;
+
+		std::string letters = "";
 		for (int i = 0; i < str.length(); i++)
 		{
 			str[i] = tolower(str[i]);
@@ -41,32 +42,48 @@ int main()
 		letters += str[0];
 		for (int i = 0; i < str.length() - 1; i++)
 		{
-			if (sum == 4)
-			{
-				Letters[size] = letters + ")";
-				word[size] = str;
-				size++;
-				break;
-			}
-
+			//std::cout << str[i] << std::endl;
 			if (str[i + 1] >= str[i])
 			{
 				sum += 1;
-				letters += str[i];
+				//std::cout << sum << " ";
+				letters += str[i + 1];
+				//std::cout << letters << std::endl;
 			}
-			else 
+			else
 			{
 				sum = 1;
-				letters = "(" + str[i + 1];
+				letters = "";
+				letters += str[i + 1];
+			}
+			if (sum == 4)
+			{
+				int ind = str.find(letters);
+				for (int i = 0; i < ind; i++)
+				{
+					if (ispunct(p[i]))
+					{
+						ind += 1;
+					}
+				}
+				std::cout << ind << std::endl;
+				for (int i = ind; i <= ind + 3; i++)
+				{ 
+					p[i] = toupper(p[i]);
+				}
+				p += "(" + letters + ")";
+				break;
 			}
 		}
+		fout << p << " ";
 	}
 
-
-	for (int i = 0; i < size; i++)
+	/*for (int i = 0; i < size; i++)
 	{
+		std::cout << word[i] << " " << Letters[i] << std::endl;
 		fout << word[i] << " " << Letters[i] << std::endl;
 	}
-	
+	//std::cout << size;*/
+
 	system("pause");
 }
