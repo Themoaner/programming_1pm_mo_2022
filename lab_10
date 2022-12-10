@@ -55,6 +55,15 @@ int main()
 
 	teacher->PrintStudents();
 
+	Student* student1 = new Student("Karina", "Sidorenko", "1PM");
+	Student* student2 = new Student("Sasha", "Miorjngvoir", "1PM");
+	Student* student3 = new Student("Nhesbfi", "Roihnerg", "1PM");
+
+	teacher->AddStudent(student1);
+	teacher->AddStudent(student2);
+	teacher->AddStudent(student3);
+
+	teacher->PrintStudents();
 
 
 	delete teacher;
