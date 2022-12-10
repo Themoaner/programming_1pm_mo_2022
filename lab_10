@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+
+class Student
+{
+private:
+	std::string m_name;
+	std::string m_surName;
+	std::string m_groupe;
+
+public:
+	Student(std::string name, std::string surName, std::string groupe)
+	{
+		m_name = name;
+		m_surName = surName;
+		m_groupe = groupe;
+	}
+
+	std::string getName()
+	{
+		return m_name + " " + m_surName;
+	}
+};
+
+class Teacher
+{
+private:
+	std::string m_name;
+	std::string m_subject;
+	std::vector<Student*> m_students;
+
+public:
+	Teacher(std::string name, std::string subject)
+	{
+		m_name = name;
+		m_subject = subject;
+	}
+	void AddStudent(Student*& student)
+	{
+		m_students.push_back(student);	
+	}
+
+	void PrintStudents()
+	{
+		for (size_t i = 0; i < m_students.size(); i++)
+		{
+			std::cout << m_students[i]->getName() << std::endl;
+		}
+	}
+};
+
+int main()
+{
+	Teacher* teacher = new Teacher("Irina Vladimirovna", "Math");
+
+	teacher->PrintStudents();
+
+
+
+	delete teacher;
+	return 0;
+}
