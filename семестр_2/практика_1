@@ -1,0 +1,46 @@
+/*Реализуйте класс, который будет выполнять шифрование и дешифрование сообщения на английском языке.
+Длина сообщения не более 30 слов.Словом называется последовательность символов до первого пробела.
+Знак препинания после символов тоже входит в слово.
+Ключом является последовательность Фибоначчи.*/
+
+#include <iostream>
+
+class encryption
+{
+private:
+	std::string m_message;
+	int m_FKey[30] = { 1, 2 };
+	int m_currentKey[30];
+	int amountOfWords = 1;
+
+	void WordCounter(std::string message)
+	{
+		for (int i = 0; i < message.length(); i++)
+		{
+			if (message[i] = ' ')
+				amountOfWords += 1;
+
+		}
+	}
+
+	void Fibonacci()
+	{
+		for (int i = 2; i < amountOfWords; i++)
+		{
+			m_FKey[i] = m_FKey[i - 1] + m_FKey[i + 2];
+		}
+	}
+
+public:
+	encryption(std::string message)
+	{
+		m_message = message;
+		WordCounter(message);
+		Fibonacci();
+
+	}
+};
+
+int main()
+{
+}
