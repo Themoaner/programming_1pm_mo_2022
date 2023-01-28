@@ -4,15 +4,16 @@
 Ключом является последовательность Фибоначчи.*/
 
 #include <iostream>
+#include <string>
 #include <vector>
 
-class encryption
+class Encryption
 {
 private:
 	std::string m_message;
 	std::string m_Words[30];
 	std::vector<int> m_FKey = { 1, 2 };
-	std::vector<int> currentKey;
+	std::vector<int> m_currentKey;
 	int amountOfWords = 1;
 
 	void WordCounter(std::string message)
@@ -33,15 +34,15 @@ private:
 	}
 
 public:
-	encryption(std::string message)
+	Encryption(std::string message, std::vector<int> currentKey)
 	{
 		m_message = message;
+		m_currentKey = currentKey;
 		WordCounter(message);
 		Fibonacci();
 	}
-	
 
-	void InputMessage()
+	void Words()
 	{
 		for (int i = 0; i < amountOfWords; i++)
 		{
@@ -66,7 +67,7 @@ public:
 		for (int i = 0; i < amountOfWords; i++)
 		{
 			std::cin >> a;
-			currentKey.push_back(a);
+			m_currentKey.push_back(a);
 		}
 	}
 
@@ -100,17 +101,64 @@ public:
 
 	void check_currentKey()
 	{
-		if (currentKey.size() == amountOfWords)
+		if (m_currentKey.size() == amountOfWords)
 		{
-			if (Equal(currentKey, m_FKey) == false)
+			if (Equal(m_currentKey, m_FKey) == false)
 			{
 				std::cout << "Wrong Key" << std::endl;
 			}
 		}
 	}
-	
+
+
+	void Encode()
+	{
+		for (int i = 0; i < amountOfWords; i++)
+		{
+			for (int j = 0; j < amountOfWords; j++)
+			{
+				if (m_currentKey[i] == m_FKey[j])
+				{
+					std::swap(m_Words[i], m_Words[j]);
+				}
+			}
+		}
+	}
+
+	void Decode()
+	{
+		for (int i = amountOfWords; i > 0; i--)
+		{
+			for (int j = amountOfWords; j > 0; j--)
+			{
+				if (m_currentKey[i] == m_FKey[j])
+				{
+					std::swap(m_Words[i], m_Words[j]);
+				}
+			}
+		}
+	}
+
+	void Output()
+	{
+		for (int i = 0; i < amountOfWords; i++)
+		{
+			std::cout << m_Words[i] << std::endl << m_currentKey[i] << " ";
+		}
+	}
 };
 
 int main()
 {
+	std::string message;
+	std::vector<int> currentKey;
+	std::cout << "Enter the message" << std::endl;
+	std::getline(std::cin, message);
+	Encryption SK(message, currentKey);
+	SK.Words();
+	SK.InputKey();
+	SK.check_currentKey();
+	SK.Encode();
+	SK.Decode();
+	SK.Output();
 }
