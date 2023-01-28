@@ -1,16 +1,18 @@
 /*Реализуйте класс, который будет выполнять шифрование и дешифрование сообщения на английском языке.
-Длина сообщения не более 30 слов.Словом называется последовательность символов до первого пробела.
+Длина сообщения не более 30 слов. Словом называется последовательность символов до первого пробела.
 Знак препинания после символов тоже входит в слово.
 Ключом является последовательность Фибоначчи.*/
 
 #include <iostream>
+#include <vector>
 
 class encryption
 {
 private:
 	std::string m_message;
-	int m_FKey[30] = { 1, 2 };
-	int m_currentKey[30];
+	std::string m_Words[30];
+	std::vector<int> m_FKey = { 1, 2 };
+	std::vector<int> currentKey;
 	int amountOfWords = 1;
 
 	void WordCounter(std::string message)
@@ -19,7 +21,6 @@ private:
 		{
 			if (message[i] = ' ')
 				amountOfWords += 1;
-
 		}
 	}
 
@@ -37,8 +38,77 @@ public:
 		m_message = message;
 		WordCounter(message);
 		Fibonacci();
-
 	}
+	
+
+	void InputMessage()
+	{
+		for (int i = 0; i < amountOfWords; i++)
+		{
+			for (int j = 0; j < m_message.length(); j++)
+			{
+				if (m_message[j] != ' ')
+				{
+					m_Words[i] += m_message[j];
+				}
+				else if (m_message[j] == ' ')
+				{
+					break;
+				}
+			}
+		}
+	}
+
+	void InputKey()
+	{
+		std::cout << "Enter the key" << std::endl;
+		int a;
+		for (int i = 0; i < amountOfWords; i++)
+		{
+			std::cin >> a;
+			currentKey.push_back(a);
+		}
+	}
+
+	bool Equal(std::vector<int> V1, std::vector<int> V2)
+	{
+		int coincidence = 0;
+		for (int i = 0; i < amountOfWords; i++)
+		{
+			for (int j = 0; j < amountOfWords; j++)
+			{
+				if (V1[i] == V2[j] && V1[i] != V1[j])
+				{
+					coincidence += 1;
+				}
+			}
+			if (coincidence != 1)
+			{
+				break;
+			}
+		}
+
+		if (coincidence == amountOfWords)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	void check_currentKey()
+	{
+		if (currentKey.size() == amountOfWords)
+		{
+			if (Equal(currentKey, m_FKey) == false)
+			{
+				std::cout << "Wrong Key" << std::endl;
+			}
+		}
+	}
+	
 };
 
 int main()
