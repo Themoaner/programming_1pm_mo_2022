@@ -64,11 +64,8 @@ public:
 	{
 		std::cout << "Enter the key" << std::endl;
 		int a;
-		for (int i = 0; i < amountOfWords; i++) // ??
-		{
-			std::cin >> a;
-			m_currentKey.push_back(a);
-		}
+		std::cin >> a;
+		m_currentKey.push_back(a);
 	}
 
 	bool Equal(std::vector<int> V1, std::vector<int> V2)
