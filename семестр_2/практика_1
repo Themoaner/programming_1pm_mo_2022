@@ -10,17 +10,19 @@
 class Encryption
 {
 private:
-	std::string m_message;
-	std::string m_Words[30];
+	std::string m_line;
+	//std::vector<std::string> m_message;
+	std::string m_mas[30];
+	std::vector<std::string> m_Words;
 	std::vector<int> m_FKey = { 1, 2 };
 	std::vector<int> m_currentKey;
 	int amountOfWords = 1;
 
-	void WordCounter(std::string message)
+	void WordCounter(std::string line)
 	{
-		for (int i = 0; i < message.length(); i++)
+		for (int i = 0; i < line.length(); i++)
 		{
-			if (message[i] = ' ')
+			if (line[i] = ' ')
 				amountOfWords += 1;
 		}
 	}
@@ -34,11 +36,12 @@ private:
 	}
 
 public:
-	Encryption(std::string message, std::vector<int> currentKey)
+	Encryption(/*std::vector<std::string> message, */std::vector<int> currentKey, std::string line)
 	{
-		m_message = message;
+		//m_message = message;
 		m_currentKey = currentKey;
-		WordCounter(message);
+		m_line = line;
+		WordCounter(line);
 		Fibonacci();
 	}
 
@@ -46,17 +49,21 @@ public:
 	{
 		for (int i = 0; i < amountOfWords; i++)
 		{
-			for (int j = 0; j < m_message.length(); j++)
+			for (int j = 0; j < m_line.length(); j++)
 			{
-				if (m_message[j] != ' ')
+				if (m_line[j] != ' ')
 				{
-					m_Words[i] += m_message[j];
+					m_mas[i] += m_line[j];
 				}
-				else if (m_message[j] == ' ')
+				else if (m_line[j] == ' ')
 				{
 					break;
 				}
 			}
+		}
+		for (int i = 0; i < amountOfWords; i++)
+		{
+			m_Words.push_back(m_mas[i]);
 		}
 	}
 
@@ -147,11 +154,12 @@ public:
 
 int main()
 {
-	std::string message;
+	//std::vector<std::string> message;
+	std::string line;
 	std::vector<int> currentKey;
 	std::cout << "Enter the message" << std::endl;
-	std::getline(std::cin, message);
-	Encryption SK(message, currentKey);
+	std::getline(std::cin, line);
+	Encryption SK(/*message, */currentKey, line);
 	SK.Words();
 	SK.InputKey();
 	SK.check_currentKey();
