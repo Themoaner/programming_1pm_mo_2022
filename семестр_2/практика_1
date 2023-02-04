@@ -13,7 +13,9 @@ private:
 	std::string m_line;
 	//std::vector<std::string> m_message;
 	std::string m_mas[30];
-	std::vector<std::string> m_Words;
+	std::vector<std::string> m_encode;
+	std::vector<std::string> m_decode;
+	//std::vector<std::string> m_Words;
 	std::vector<int> m_FKey = { 1, 2 };
 	std::vector<int> m_currentKey;
 	int amountOfWords = 1;
@@ -22,7 +24,7 @@ private:
 	{
 		for (int i = 0; i < line.length(); i++)
 		{
-			if (line[i] = ' ')
+			if (line[i] ==' ')
 				amountOfWords += 1;
 		}
 	}
@@ -31,7 +33,7 @@ private:
 	{
 		for (int i = 2; i < amountOfWords; i++)
 		{
-			m_FKey[i] = m_FKey[i - 1] + m_FKey[i + 2];
+			m_FKey.push_back(m_FKey[i - 1] + m_FKey[i - 2]);
 		}
 	}
 
@@ -47,32 +49,45 @@ public:
 
 	void Words()
 	{
-		for (int i = 0; i < amountOfWords; i++)
+		int i = 0;
+		for (int j = 0; j < m_line.length(); j++)
 		{
-			for (int j = 0; j < m_line.length(); j++)
+			if (m_line[j] != ' ')
 			{
-				if (m_line[j] != ' ')
-				{
-					m_mas[i] += m_line[j];
-				}
-				else if (m_line[j] == ' ')
-				{
-					break;
-				}
+				m_mas[i] += m_line[j];
+			}
+			else if (m_line[j] == ' ')
+			{
+				i++;
 			}
 		}
-		for (int i = 0; i < amountOfWords; i++)
+		/*for (int i = 0; i < amountOfWords; i++)
 		{
 			m_Words.push_back(m_mas[i]);
+		}*/
+		/*for (int i = 0; i < m_Words.size(); i++)
+		{
+			std::cout << m_Words[i] << " ";
 		}
+		std::cout << std::endl;
+		for (int i = 0; i < amountOfWords; i++)
+		{
+			std::cout << m_mas[i] << " ";
+		}
+		std::cout << std::endl;*/
 	}
 
 	void InputKey()
 	{
-		std::cout << "Enter the key" << std::endl;
+		std::cout << "Enter the key" << std::endl << "(-1) is a breakpoint" << std::endl;
 		int a;
-		std::cin >> a;
-		m_currentKey.push_back(a);
+		while (std::cin >> a) 
+		{
+			if (a == -1) break;
+			m_currentKey.push_back(a);
+			
+		}
+		
 	}
 
 	bool Equal(std::vector<int> V1, std::vector<int> V2)
@@ -82,14 +97,10 @@ public:
 		{
 			for (int j = 0; j < amountOfWords; j++)
 			{
-				if (V1[i] == V2[j] && V1[i] != V1[j])
+				if (V1[i] == V2[j])
 				{
 					coincidence += 1;
 				}
-			}
-			if (coincidence != 1)
-			{
-				break;
 			}
 		}
 
@@ -105,49 +116,92 @@ public:
 
 	void check_currentKey()
 	{
-		if (m_currentKey.size() == amountOfWords)
+		//std::cout << m_currentKey.size() << " " << m_FKey.size() << " " << amountOfWords << std::endl;
+		if (Equal(m_currentKey, m_FKey) == false)
 		{
-			if (Equal(m_currentKey, m_FKey) == false)
-			{
-				std::cout << "Wrong Key" << std::endl;
-			}
+			std::cout << "Wrong Key" << std::endl;
 		}
 	}
 
 
-	void Encode()
+	void Encode() 
 	{
-		for (int i = 0; i < amountOfWords; i++)
+		if (Equal(m_currentKey, m_FKey) == true)
 		{
-			for (int j = 0; j < amountOfWords; j++)
+			//std::string buffer;
+			for (int i = 0; i < amountOfWords; i++)
 			{
-				if (m_currentKey[i] == m_FKey[j])
+				for (int j = 0; j < amountOfWords; j++)
 				{
-					std::swap(m_Words[i], m_Words[j]);
+					if (m_currentKey[i] == m_FKey[j])
+					{
+						m_encode.push_back(m_mas[j]);
+						//std::swap(m_mas[i], m_mas[j]);
+						/*buffer = m_Words[i];
+						m_Words[i] = m_Words[j];
+						m_Words[j] = buffer;*/
+					}
 				}
 			}
 		}
+		//for (int i = 0; i < amountOfWords; i++)
+		//{
+		//	std::cout << m_mas[i] << " ";
+		//	//std::cout << m_Words[i] << " ";
+		//}
+		//std::cout << std::endl;
+		//for (int i = 0; i < amountOfWords; i++)
+		//{
+		//	std::cout << m_currentKey[i] << " ";
+		//}
 	}
 
-	void Decode()
-	{
-		for (int i = amountOfWords; i > 0; i--)
-		{
-			for (int j = amountOfWords; j > 0; j--)
-			{
-				if (m_currentKey[i] == m_FKey[j])
-				{
-					std::swap(m_Words[i], m_Words[j]);
-				}
-			}
-		}
-	}
+	//void Decode()
+	//{
+	//	if (Equal(m_currentKey, m_FKey) == true)
+	//	{
+	//		//std::string buffer;
+	//		for (int i = amountOfWords; i > 0; i--)
+	//		{
+	//			for (int j = amountOfWords; j > 0; j--)
+	//			{
+	//				if (m_currentKey[i] > m_currentKey[j])
+	//				{
+	//					std::swap(m_mas[i], m_mas[j]);
+	//					/*buffer = m_Words[i];
+	//					m_Words[i] = m_Words[j];
+	//					m_Words[j] = buffer;*/
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 
-	void Output()
+	void Output1()
 	{
 		for (int i = 0; i < amountOfWords; i++)
 		{
-			std::cout << m_Words[i] << std::endl << m_currentKey[i] << " ";
+			std::cout << m_encode[i] << " ";
+			//std::cout << m_Words[i] << " ";
+		}
+		std::cout << std::endl;
+		for (int i = 0; i < amountOfWords; i++)
+		{
+			std::cout << m_currentKey[i] << " ";
+		}
+	}
+
+	void Output2()
+	{
+		for (int i = 0; i < amountOfWords; i++)
+		{
+			std::cout << m_decode[i] << " ";
+			//std::cout << m_Words[i] << " ";
+		}
+		std::cout << std::endl;
+		for (int i = 0; i < amountOfWords; i++)
+		{
+			std::cout << m_currentKey[i] << " ";
 		}
 	}
 };
@@ -164,6 +218,10 @@ int main()
 	SK.InputKey();
 	SK.check_currentKey();
 	SK.Encode();
-	SK.Decode();
-	SK.Output();
+	//SK.Decode();
+	SK.Output1();
+	//SK.Output2();
+
+	system("pause");
+	return 0;
 }
