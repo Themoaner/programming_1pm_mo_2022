@@ -24,7 +24,7 @@ private:
 	{
 		for (int i = 0; i < line.length(); i++)
 		{
-			if (line[i] ==' ')
+			if (line[i] == ' ')
 				amountOfWords += 1;
 		}
 	}
@@ -81,13 +81,13 @@ public:
 	{
 		std::cout << "Enter the key" << std::endl << "(-1) is a breakpoint" << std::endl;
 		int a;
-		while (std::cin >> a) 
+		while (std::cin >> a)
 		{
 			if (a == -1) break;
 			m_currentKey.push_back(a);
-			
+
 		}
-		
+
 	}
 
 	bool Equal(std::vector<int> V1, std::vector<int> V2)
@@ -124,7 +124,7 @@ public:
 	}
 
 
-	void Encode() 
+	void Encode()
 	{
 		if (Equal(m_currentKey, m_FKey) == true)
 		{
@@ -156,27 +156,6 @@ public:
 		//}
 	}
 
-	//void Decode()
-	//{
-	//	if (Equal(m_currentKey, m_FKey) == true)
-	//	{
-	//		//std::string buffer;
-	//		for (int i = amountOfWords; i > 0; i--)
-	//		{
-	//			for (int j = amountOfWords; j > 0; j--)
-	//			{
-	//				if (m_currentKey[i] > m_currentKey[j])
-	//				{
-	//					std::swap(m_mas[i], m_mas[j]);
-	//					/*buffer = m_Words[i];
-	//					m_Words[i] = m_Words[j];
-	//					m_Words[j] = buffer;*/
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
-
 	void Output1()
 	{
 		for (int i = 0; i < amountOfWords; i++)
@@ -191,11 +170,34 @@ public:
 		}
 	}
 
+	void Decode()
+	{
+		if (Equal(m_currentKey, m_FKey) == true)
+		{
+			//std::string buffer;
+			for (int i = 0; i < amountOfWords; i++)
+			{
+				for (int j = i + 1; j < amountOfWords; j++)
+				{
+					if (m_currentKey[i] > m_currentKey[j])
+					{
+						std::swap(m_currentKey[i], m_currentKey[j]);
+						std::swap(m_encode[i], m_encode[j]);
+						/*buffer = m_Words[i];
+						m_Words[i] = m_Words[j];
+						m_Words[j] = buffer;*/
+					}
+				}
+			}
+		}
+	}
+
 	void Output2()
 	{
+		std::cout << std::endl << "Decode:" << std::endl;
 		for (int i = 0; i < amountOfWords; i++)
 		{
-			std::cout << m_decode[i] << " ";
+			std::cout << m_encode[i] << " ";
 			//std::cout << m_Words[i] << " ";
 		}
 		std::cout << std::endl;
@@ -218,9 +220,9 @@ int main()
 	SK.InputKey();
 	SK.check_currentKey();
 	SK.Encode();
-	//SK.Decode();
 	SK.Output1();
-	//SK.Output2();
+	SK.Decode();
+	SK.Output2();
 
 	system("pause");
 	return 0;
