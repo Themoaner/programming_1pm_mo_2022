@@ -7,7 +7,8 @@ T Copy(T sourse[N], T destination[N])
 {
 	for (int i = 0; i < N; i++)
 	{
-		destination[i] = *(&sourse[i]);
+		T* k = &sourse[i];
+		destination[i] = *k;
 	}
 
 	for (int i = 0; i < N; i++)
