@@ -1,0 +1,28 @@
+#include <iostream>
+
+const int N = 1000;
+
+template<typename T>
+T Copy(T sourse[N], T destination[N])
+{
+	for (int i = 0; i < N; i++)
+	{
+		destination[i] = *(&sourse[i]);
+	}
+
+	for (int i = 0; i < N; i++)
+	{
+		std::cout << destination[i] << " "
+	}
+	std::cout << std::endl;
+}
+
+int main()
+{
+	int sour[N] = { 1, 23, 456, 7890 };
+	int dest[N] = {};
+	const int copy = Copy<int>(sour, dest);
+
+	system("pause");
+	return 0;
+}
