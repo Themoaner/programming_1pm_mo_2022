@@ -3,26 +3,39 @@
 const int N = 1000;
 
 template<typename T>
-T Copy(T sourse[N], T destination[N])
+T Copy(T sourse[N], T destination[N], int size)
 {
 	for (int i = 0; i < N; i++)
 	{
 		T* k = &sourse[i];
 		destination[i] = *k;
+		//std::cout << sizeof k << std::endl;
+		//std::cout << sizeof sourse[i] << std::endl;
 	}
 
-	for (int i = 0; i < N; i++)
+	for (int i = 0; i < size; i++)
 	{
-		std::cout << destination[i] << " "
+		std::cout << destination[i] << " ";
 	}
 	std::cout << std::endl;
+	
+	return *destination;
 }
 
 int main()
 {
-	int sour[N] = { 1, 23, 456, 7890 };
-	int dest[N] = {};
-	const int copy = Copy<int>(sour, dest);
+	/*int sour[N] = { 1, 23, 456, 7890 };
+	int dest[N];
+	const int copy = Copy<int>(sour, dest, 4);*/
+
+	std::string sour[N] = { "Hi, ", " I'm ", "soooooo ", "tired" };
+	std::string dest[N];
+	const std::string copy = Copy<std::string>(sour, dest, 4);
+	
+	/*double sour[N] = { 1.2, 3.4, 5.6, 7.8 };
+	double dest[N];
+	const double copy = Copy<double>(sour, dest, 4);*/
+
 
 	system("pause");
 	return 0;
