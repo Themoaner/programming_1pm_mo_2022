@@ -1,0 +1,76 @@
+//Реализуйте класс String для работы со строками. У вас должны быть реализованы :
+//1.+	Базовый конструктор
+//2.+	Конструктор копирования(правило 3 - х)
+//3.+	Оператор присваивания копированием(правило 3 - х)
+//4.+	Деструктор(правило 3 - х)
+//5.	Операторы + и +=
+//6.	Оператор[] – чтение и изменение элемента
+//7.	Операторы <, >, ==
+//8.	Операторы ввода и вывода в поток
+//9.	Метод find – поиск первого вхождения символа в строку слева
+//10.+	Метод length – длина строки
+//11.	Метод c_str – получить массив char
+//12.	Метод at для получения доступа(чтение и изменение) к элементу строки с проверкой на выход за пределы строки
+
+#include <iostream>
+struct String
+{
+private:
+    size_t m_size;
+    char* m_str = nullptr;
+
+public:
+    String() = default;
+    String(int c, size_t size) = delete; // Запрет неявного преобразования типов из int в char
+
+    //1.) Базовый конструктор
+    String(char a, size_t size) : m_size(size + 1), m_str(new char[m_size])
+    {
+        std::fill(m_str, m_str + m_size - 1, a);
+        m_str[m_size - 1] = '\0';
+    }
+
+    //1.) Конструктор строкой
+    String(const char* str_from) : m_size(strlen(str_from) + 1), m_str(new char[m_size])
+    {
+        std::copy(str_from, str_from + m_size, m_str);
+    }
+
+    //2.) Конструктор копирования + делигирующий конструктор
+    String(const String& other) : String(other.m_str)//m_size(other.m_size), m_str(new char[m_size])
+    {
+        //std::copy(other.m_str, other.m_str + m_size, m_str);
+    }
+
+    //3.) Оператор присваивания копированием
+    String& operator=(String temporary)
+    {
+        std::swap(m_size, temporary.m_size);
+        std::swap(m_str, temporary.m_str);
+        return *this;
+    }
+
+
+    //4.
+    ~String()
+    {
+        if (m_str != nullptr)
+        {
+            delete[] m_str;
+        }
+    }
+
+    //10
+    int length()
+    {
+        return (m_size - 1);
+    }
+
+};
+
+
+int main()
+{
+    String S1();
+   
+}
