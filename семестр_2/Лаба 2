@@ -23,18 +23,20 @@ public:
 	String() = default;
 	String(int c, size_t size) = delete; // Запрет неявного преобразования типов из int в char
 
-	//1.) Конструктор (Неявное преобразование типов из int в char)
+	//1.1.) Базовый Конструктор
 	String(char c, size_t size) : m_size(size), m_str(new char[size + 1])
 	{
 		std::fill(m_str, m_str + m_size, c);
 		m_str[m_size] = 0;
+		std::cout << "Basic constr." << std::endl;
 	}
 
-	//1.) Конструктор от строки, список инициализации членов класса (Member initializer)
-	String(char* str) : m_size(strlen(str)), m_str(new char[m_size])
+	//1.2.) Конструктор от строки, список инициализации членов класса (Member initializer)
+	String(const char* str) : m_size(strlen(str)), m_str(new char[m_size])
 	{
 		std::copy(str, str + m_size, m_str);
 		m_str[m_size] = 0;
+		std::cout << "Constr. from str." << std::endl;
 	}
 
 	//2.) Конструктор копирования + делигирующий конструктор
@@ -45,8 +47,9 @@ public:
 		m_str = new char[m_size];
 		//Копируем строку из other
 		std::copy(other.m_str, other.m_str + other.m_size, m_str);
+		std::cout << "Copy" << std::endl;
 	}
-	
+
 
 	//3.) Оператор присваивания копированием
 	String& operator=(String& temp)
@@ -58,9 +61,10 @@ public:
 		m_size = other.m_size;
 		m_str = new char[m_size];
 		std::copy(other.m_str, other.m_str + other.m_size, m_str);*/
+		std::cout << "Copy-and-swap" << std::endl;
 		return *this;
 	}
-	
+
 
 	//4.) Деструктор
 	~String()
@@ -69,7 +73,10 @@ public:
 		{
 			delete[] m_str;
 		}
+		std::cout << "Destructor" << std::endl;
 	}
+	
+	
 	//5.	Операторы + и +=
 
 
@@ -77,6 +84,7 @@ public:
 	//6.) Оператор[]
 	char& operator[](int i)
 	{
+		std::cout << "Operator[]" << std::endl;
 		return m_str[i];
 	}
 
@@ -95,6 +103,7 @@ public:
 		{
 			if (m_str[i] == c)
 			{
+				std::cout << "Find" << std::endl;
 				return i;
 			}
 		}
@@ -104,6 +113,7 @@ public:
 	//10.) Length
 	int length()
 	{
+		std::cout << "Length" << std::endl;
 		return (m_size - 1);
 	}
 
@@ -112,11 +122,12 @@ public:
 
 
 	//12.	Метод at для получения доступа(чтение и изменение) к элементу строки с проверкой на выход за пределы строки
-	char& at(int i)
+	char& at(int index)
 	{
-		if (0 <= i <= (m_size - 1))
+		if (0 <= index <= (m_size - 1))
 		{
-			return m_str[i];
+			std::cout << "at" << std::endl;
+			return m_str[index];
 		}
 		else
 		{
@@ -130,23 +141,26 @@ public:
 		{
 			std::cout << m_str[i];
 		}
+		std::cout << std::endl;
 	}
 };
 
-void f(String s)
-{
-	s.Print();
-}
-
 int main()
 {
-	String S1("Hello, world!");
-	String S2("aaaaaaaa");
-	f(S1);
-	S2 = S1;
+	String S1('a', 5);
+	String S2("bbdbb");
+	String S3(S2);
+	String S4("a");
+	S4 = S1;
 
 	S1.Print();
 	S2.Print();
+	S3.Print();
+	S4.Print();
+
+	std::cout << S4[2] << std::endl;
+	std::cout << S2.Find('d') << std::endl;
+	std::cout << S3.length() << std::endl;
 
 	return 0;
 }
