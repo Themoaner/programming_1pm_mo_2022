@@ -13,6 +13,7 @@
 //12.+	Метод at для получения доступа(чтение и изменение) к элементу строки с проверкой на выход за пределы строки
 
 #include <iostream>
+#include <cstring>
 struct String
 {
 private:
@@ -32,7 +33,7 @@ public:
 	}
 
 	//1.2.) Конструктор от строки, список инициализации членов класса (Member initializer)
-	String(const char* str) : m_size(strlen(str)), m_str(new char[m_size])
+	String(char* str) : m_size(strlen(str)), m_str(new char[m_size])
 	{
 		std::copy(str, str + m_size, m_str);
 		m_str[m_size] = 0;
@@ -40,7 +41,7 @@ public:
 	}
 
 	//2.) Конструктор копирования + делигирующий конструктор
-	String(const String& other) : String(other.m_str)
+	/*String(const String& other) : String(other.m_str)
 	{
 		m_size = other.m_size;
 		//Выделили память
@@ -48,7 +49,7 @@ public:
 		//Копируем строку из other
 		std::copy(other.m_str, other.m_str + other.m_size, m_str);
 		std::cout << "Copy" << std::endl;
-	}
+	}*/
 
 
 	//3.) Оператор присваивания копированием
@@ -75,10 +76,23 @@ public:
 		}
 		std::cout << "Destructor" << std::endl;
 	}
-	
-	
-	//5.	Операторы + и +=
 
+
+	//5.	Операторы + и +=
+	/*String& operator+(const String& other)
+	{
+		String result('a', m_size + other.m_size - 1);
+		for (int i = 0; i < (m_size - 1); i++)
+		{
+			for (int j = m_size; j < (m_size + other.m_size - 2); j++)
+			{
+				result[i] = m_str[i];
+				result[j] = other.m_str[j];
+			}
+		}
+		std::cout << "Operator +" << std::endl;
+		return result;
+	}*/
 
 
 	//6.) Оператор[]
@@ -152,15 +166,18 @@ int main()
 	String S3(S2);
 	String S4("a");
 	S4 = S1;
+	//String Sum = S1 + S2;
+
 
 	S1.Print();
 	S2.Print();
 	S3.Print();
 	S4.Print();
+	//Sum.Print();
 
-	std::cout << S4[2] << std::endl;
-	std::cout << S2.Find('d') << std::endl;
-	std::cout << S3.length() << std::endl;
+	//std::cout << S4[2] << std::endl;
+	//std::cout << S2.Find('d') << std::endl;
+	//std::cout << S3.length() << std::endl;
 
 	return 0;
 }
