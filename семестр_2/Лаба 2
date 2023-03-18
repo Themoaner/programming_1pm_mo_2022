@@ -14,17 +14,21 @@
 
 #include <iostream>
 #include <cstring>
+
 struct String
 {
 private:
+    friend std::ostream& operator<<(std::ostream& out, String& s);
 	size_t m_size;
 	char* m_str = nullptr;
+	
+
 
 public:
 	String() = default;
 	String(int c, size_t size) = delete; // Запрет неявного преобразования типов из int в char
 
-	//1.1.) Базовый Конструктор
+										 //1.1.) Базовый Конструктор
 	String(char c, size_t size) : m_size(size), m_str(new char[size + 1])
 	{
 		std::fill(m_str, m_str + m_size, c);
@@ -132,6 +136,7 @@ public:
 
 	bool operator<(const String& other) const
 	{
+		//return strcmp(this->c_str, other.c_str) < 0;
 		int max = std::max((*this).m_size, other.m_size);
 		std::cout << "Operator <" << std::endl;
 		for (int i = 0; i < max; i++)
@@ -165,8 +170,6 @@ public:
 		}
 		else { return true; }
 	}
-
-	//8.	Операторы ввода и вывода в поток
 
 
 
@@ -224,14 +227,45 @@ public:
 	}
 };
 
+//8.	Операторы ввода и вывода в поток
+/*std::ostream& operator<<(std::ostream& out, const String& s)
+{
+    out << s.m_str;
+	return out;
+}*/
+
+std::istream& operator>>(std::istream& in, String& s)
+{
+    int N = 1000;
+    char mas[N];
+    int i = 0;
+    while(true)
+    {
+        
+        in >> mas[i];
+        std::cout<<mas[i]<<std::endl;
+        if (mas[i]=='\0' || mas[i]=='\n')
+        {
+            break;
+        }
+        i++;
+        
+    }
+    std::cout<<mas<<std::endl;
+    return in;
+    
+}
+
 int main()
 {
 	//char s[5] = { 'b','b','d','b','b' };
 	//char s1[1] = { 'a' };
 	String S1('c', 4);
+	std::cin>>S1;
 	//String S2(s);
-	String S2('b', 5);
-	String S3(S2);
+	//String S2('b', 5);
+	//String S3(S2);
+	//std::cout << S2<<std::endl;
 	//String S4(s1);
 	//S4 = S1;
 	//String Sum = S1 + S2;
@@ -245,7 +279,8 @@ int main()
 	//S4.Print();
 	//Sum.Print();
 
-	std::cout << S1.c_str() << std::endl;
+	
+	//std::cout << S1.c_str() << std::endl;
 	//  std::cout << (S2 == S3) << std::endl;
 	//  std::cout << (S1 < S2) << std::endl;
 	//  std::cout << (S1 > S2) << std::endl;
