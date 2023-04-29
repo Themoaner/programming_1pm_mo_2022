@@ -1,115 +1,95 @@
+#include <iostream>
 #include <SFML/Graphics.hpp>
-#include "Header.h"
+
+class AnimatedText
+{
+private:
+	std::string m_text;
+	std::string tmp_text;
+	double m_duration;
+	double m_currentDuration;
+	sf::Font font;
+	sf::Text text;
+	sf::Clock clock;
+	int k = 0;
+
+	void initSFML(std::string str)
+	{
+		font.loadFromFile("C:\\Users\\KISidorenko\\Documents\\Visual Studio 2015\\Projects\\лаба1\\лаба1\\caviar-dreams.ttf");
+		text.setFont(font);
+		text.setCharacterSize(24);
+		text.setFillColor(sf::Color::Green);
+		text.setPosition(50, 50);
+		//text.setString(str);
+	}
+
+	void sfmlSet()
+	{
+		text.setString(tmp_text);
+	}
+
+	void timer()
+	{
+		float time = clock.getElapsedTime().asSeconds();
+		if (time > m_duration)
+		{
+			if (k < m_text.length())
+			{
+				tmp_text += m_text[k];
+				k += 1;
+				sfmlSet();
+				clock.restart();
+			}
+
+		}
+	}
+
+public:
+
+	AnimatedText()
+	{
+		m_text = "default string";
+		m_duration = 28;
+	}
+
+	AnimatedText(std::string text, double duration)
+	{
+		m_text = text;
+		m_duration = duration / text.length();
+
+	}
+
+	void start() 
+	{
+		initSFML(m_text);
+		sf::RenderWindow window(sf::VideoMode(1000, 500), "test");
+
+		while (window.isOpen())
+		{
+			sf::Event event;
+			timer();
+
+			while (window.pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed)
+				{
+					window.close();
+				}
+			}
+			window.clear();
+			window.draw(text);
+			window.display();
+		}
+	}
+};
+
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1000, 600), "test");
+	std::string str = "Helloworld";
 
-	sf::Image mapImage;
-	mapImage.loadFromFile("images/map.png");
-	sf::Texture map;
-	map.loadFromImage(mapImage);
-	sf::Sprite s_map;
-	s_map.setTexture(map);
+	AnimatedText at = AnimatedText(str, 5);
+	at.start();
 
-	float CurrentFrame = 0;
-	sf::Clock clock;
-
-	sk::Player me("end.png", 250, 250, 120, 133);
-	sk::Boat boat("boat1.png", 0, 520, 100, 80);
-
-	while (window.isOpen())
-	{
-		float time = clock.getElapsedTime().asMicroseconds();
-		clock.restart();
-		time = time / 800;
-
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-			{
-				window.close();
-			}
-		}
-
-		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || (sf::Keyboard::isKeyPressed(sf::Keyboard::A))))
-		{
-			me.direction = 1;
-			me.speed = 0.1;
-			CurrentFrame += 0.005 * time;
-			if (CurrentFrame > 3)
-			{
-				CurrentFrame -= 3;
-			}
-			me.sprite.setTextureRect(sf::IntRect(120 * int(CurrentFrame), 266, 120, 133));
-		}
-
-		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || (sf::Keyboard::isKeyPressed(sf::Keyboard::D))))
-		{
-			me.direction = 0;
-			me.speed = 0.1;
-			CurrentFrame += 0.005 * time;
-			if (CurrentFrame > 3)
-			{
-				CurrentFrame -= 3;
-			}
-			me.sprite.setTextureRect(sf::IntRect(120 * int(CurrentFrame), 399, 120, 133));
-		}
-
-		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || (sf::Keyboard::isKeyPressed(sf::Keyboard::W))))
-		{
-			me.direction = 3;
-			me.speed = 0.1;
-			CurrentFrame += 0.005 * time;
-			if (CurrentFrame > 3)
-			{
-				CurrentFrame -= 3;
-			}
-			me.sprite.setTextureRect(sf::IntRect(120 * int(CurrentFrame), 133, 120, 133));
-		}
-
-		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || (sf::Keyboard::isKeyPressed(sf::Keyboard::S))))
-		{
-			me.direction = 2;
-			me.speed = 0.1;
-			CurrentFrame += 0.005 * time;
-			if (CurrentFrame > 3)
-			{
-				CurrentFrame -= 3;
-			}
-			me.sprite.setTextureRect(sf::IntRect(120 * int(CurrentFrame), 0, 120, 133));
-		}
-
-		me.update(time);
-		boat.update(time);
-
-		window.clear();
-
-		for (int i = 0; i < HEIGHT_MAP; i++)
-		{
-			for (int j = 0; j < WIDTH_MAP; j++)
-			{
-				if (TileMap[i][j] == 'g')
-					s_map.setTextureRect(sf::IntRect(0, 0, 100, 100));
-				if (TileMap[i][j] == '1')
-					s_map.setTextureRect(sf::IntRect(200, 0, 100, 100));
-				if (TileMap[i][j] == '0')
-					s_map.setTextureRect(sf::IntRect(100, 0, 100, 100));
-				if (TileMap[i][j] == 's')
-					s_map.setTextureRect(sf::IntRect(401, 0, 100, 100));
-				if (TileMap[i][j] == 'w')
-					s_map.setTextureRect(sf::IntRect(301, 0, 100, 100));
-				if (TileMap[i][j] == '+')
-					s_map.setTextureRect(sf::IntRect(502, 0, 100, 100));
-				s_map.setPosition(j * 100, i * 100);
-				window.draw(s_map);
-			}
-		}
-
-		window.draw(boat.sprite);
-		window.draw(me.sprite);
-		window.display();
-	}
 	return 0;
 }
