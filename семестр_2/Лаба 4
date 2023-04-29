@@ -1,0 +1,227 @@
+//Реализуйте шаблонный класс для описания матриц(в частном случае, векторов).Предусмотрите 3 шаблонных параметра : тип элемента, размеры матрицы N и M(N, M <= 3)
+//1.	Конструктор копирования
+//2.	Оператор присваивания копированием
+//3.	Оператор ввода и вывода
+//4.	Операторы + , +=, *, *=
+//5.	Оператор++, который увеличивает все элементы матрицы на 1
+//6.	Метод вычисления определителя
+//7.	Метод или оператор для получения и изменения элемента матрицы по индексу
+
+
+#include <iostream>
+
+template<typename I, int P, int Q>
+struct Sec_Matrix {
+	I m_matrix[P][Q];
+};
+
+template<typename T, int N, int M>
+class Matrix
+{
+private:
+	T m_matrix[N][M];
+	int m_n = N;
+	int m_m = M;
+	//friend std::istream& operator >> (std::istream& in, Matrix& m);
+	//friend std::ostream& operator<<(std::ostream& out, const Matrix& m);
+
+public:
+
+	//1. Базовый конструктор
+	Matrix()
+	{
+		m_n = N;
+		m_m = M;
+
+		for (int i = 0; i < m_n; i++)
+		{
+			for (int j = 0; j < m_m; j++)
+			{
+				m_matrix[i][j] = 0;
+			}
+		}
+	}
+
+	Matrix(int n, int m)
+	{
+		m_n = n;
+		m_m = m;
+		
+		for (int i = 0; i < m_n; i++)
+		{
+			for (int j = 0; j < m_m; j++)
+			{
+				m_matrix[i][j] = 0;
+			}
+		}
+	}
+
+	~Matrix() = default;
+
+	//2. Конструктор копирования
+	Matrix(const Matrix& other)
+	{
+		std::cout << "Copy constructor";
+		m_n = other.m_n;
+		m_m = other.m_m;
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < M; j++)
+			{
+				m_matrix[i][j] = other.m_matrix[i][j];
+			}
+		}
+	}
+
+	//Оператор присваивания
+	Matrix& operator=(Matrix& temp)
+	{
+		std::cout << "Operator = " << std::endl;
+		std::swap(m_matrix, temp.m_matrix);
+		std::swap(m_n, temp.m_n);
+		std::swap(m_m, temp.m_m);
+		return *this;
+	}
+
+	//Оператор +
+	Matrix operator+(Matrix& other)
+	{
+		std::cout << "Operator + " << std::endl;
+		Matrix result(m_n, m_m);
+
+		if (m_n != other.m_n || m_m != other.m_m)
+		{
+			std::cout << "The dimensions of matrices must be equal" << std::endl;
+		}
+		else
+		{
+			for (int i = 0; i < m_n; i++)
+			{
+				for (int j = 0; j < m_m; j++)
+				{
+					result.m_matrix[i][j] = m_matrix[i][j] + other.m_matrix[i][j];
+				}
+			}
+		}
+		return result;
+	}
+
+	//Оператор +=
+	Matrix& operator+=(Matrix& other)
+	{
+		std::cout << "Operator += " << std::endl;
+		if (m_n != other.m_n || m_m != other.m_m)
+		{
+			std::cout << "The dimensions of matrices must be equal" << std::endl;
+		}
+		else
+		{
+			for (int i = 0; i < n_n; i++)
+			{
+				for (int j = 0; j < m_m; j++)
+				{
+					m_matrix[i][j] = m_matrix[i][j] + other.m_matrix[i][j];
+				}
+			}
+		}
+		return *this;
+	}
+
+	//Оператор *
+	template<typename I, int P, int Q>
+	Matrix operator*(Matrix<I,P,Q>& other)
+	{
+		std::cout << "Operator * " << std::endl;
+
+		if (M != P)
+		{
+			std::cout << "The number of columns of the first matrix must match the number of rows of the second matrix" << std::endl;
+		}
+		else
+		{
+			Matrix result(N, Q);
+			for (int i = 0; i < N; i++)
+			{
+				for (int j = 0; j < Q; j++)
+				{
+					for (int k = 0; k < M; k++)
+					{
+						result.m_matrix[i][j] += m_matrix[i][k] * other.getter(k, j);
+					}
+				}
+			}
+			return result;
+		}
+		
+	}
+
+	T getter(int i, int j) {
+		return m_matrix[i][j];
+	}
+	
+	//Оператор *=
+
+
+
+
+
+	void Print() const
+	{
+		for (int i = 0; i < m_n; i++)
+		{
+			for (int j = 0; j < m_m; j++)
+			{
+				std::cout << m_matrix[i][j] << " ";
+			}
+			std::cout << std::endl;
+		}
+		
+	}
+
+	friend std::ostream& operator<<(std::ostream& out, const Matrix& m)
+	{
+		for (int i = 0; i < m.m_n; i++)
+		{
+			for (int j = 0; j < m.m_m; j++)
+			{
+				out << m.m_matrix[i][j] << " ";
+			}
+			out << std::endl;
+		}
+		return out;
+	}
+
+	friend std::istream& operator>>(std::istream& in, Matrix& m)
+	{
+		for (int i = 0; i < m.m_n; i++)
+		{
+			for (int j = 0; j < m.m_m; j++)
+			{
+				in >> m.m_matrix[i][j];
+			}
+		}
+		return in;
+	}
+};
+
+
+int main()
+{
+
+	Matrix<int, 2, 2> m1;
+	Matrix<int, 2, 1> m2;
+	Matrix<int, 2, 2> Sum;
+	
+	//m1.Print();
+	std::cin >> m1;
+	std::cin >> m2;
+	Sum = m1 * m2;
+	std::cout << Sum;
+
+
+
+
+
+	system("pause");
+	return 0;
+}
