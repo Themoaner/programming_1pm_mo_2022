@@ -6,23 +6,43 @@ class AnimatedText
 private:
 	std::string m_text;
 	std::string tmp_text;
-	int m_duration;
-	int m_currentDuration;
+	double m_duration;
+	double m_currentDuration;
 	sf::Font font;
 	sf::Text text;
+	sf::Clock clock;
+	int k = 0;
 
 	void initSFML(std::string str)
 	{
-		sf::Font font;
 		font.loadFromFile("C:\\Users\\KISidorenko\\Documents\\Visual Studio 2015\\Projects\\лаба1\\лаба1\\caviar-dreams.ttf");
-		sf::Text text;
 		text.setFont(font);
 		text.setCharacterSize(24);
 		text.setFillColor(sf::Color::Green);
 		text.setPosition(50, 50);
-		text.setString(str);
+		//text.setString(str);
 	}
 
+	void sfmlSet()
+	{
+		text.setString(tmp_text);
+	}
+
+	void timer()
+	{
+		float time = clock.getElapsedTime().asSeconds();
+		if (time > m_duration)
+		{
+			if (k < m_text.length())
+			{
+				tmp_text += m_text[k];
+				k += 1;
+				sfmlSet();
+				clock.restart();
+			}
+
+		}
+	}
 
 public:
 
@@ -32,34 +52,22 @@ public:
 		m_duration = 28;
 	}
 
-	AnimatedText(std::string text, int duration)
+	AnimatedText(std::string text, double duration)
 	{
 		m_text = text;
-		m_duration = duration;
+		m_duration = duration / text.length();
 
 	}
 
-	void start() {
-		initSFML();
-
-
-		sf::RenderWindow window(sf::VideoMode(1000, 1000), "test");
-
-
-		//Метод вычисление периодмчности появления символов
-
+	void start() 
+	{
+		initSFML(m_text);
+		sf::RenderWindow window(sf::VideoMode(1000, 500), "test");
 
 		while (window.isOpen())
 		{
-			/*sf::Font font;
-			font.loadFromFile("C:\\Users\\KISidorenko\\Documents\\Visual Studio 2015\\Projects\\лаба1\\лаба1\\caviar-dreams.ttf");
-			sf::Text text;
-			text.setFont(font);
-			text.setCharacterSize(24);
-			text.setFillColor(sf::Color::Green);
-			text.setPosition(50, 50);
-			text.setString("kkkkkkkk");
-			sf::Event event;*/
+			sf::Event event;
+			timer();
 
 			while (window.pollEvent(event))
 			{
@@ -73,9 +81,6 @@ public:
 			window.display();
 		}
 	}
-
-
-
 };
 
 
@@ -83,9 +88,8 @@ int main()
 {
 	std::string str = "Helloworld";
 
-	//AnimatedText(str, 5);
+	AnimatedText at = AnimatedText(str, 5);
+	at.start();
 
-
-	
 	return 0;
 }
