@@ -87,7 +87,7 @@ public:
 			}
 		}
 	}
-
+	
 	void checkCollisionWithMap(float Dx, float Dy)
 	{
 		for (int i = y / 32; i < (y + h) / 32; i++)
@@ -175,15 +175,15 @@ public:
 		}
 	}*/
 
-	//float getplayercoordinateX()
-	//{
-	//	return x;
-	//}
-	//
-	//float getplayercoordinateY()
-	//{
-	//	return y;
-	//}
+	float getplayercoordinateX()
+	{
+		return x;
+	}
+	
+	float getplayercoordinateY()
+	{
+		return y;
+	}
 };
 
 
@@ -205,7 +205,7 @@ int main()
 	sf::Image Susa;
 	Susa.loadFromFile("images/susa3.png");
 
-	//float CurrentFrame = 0;
+	float CurrentFrame = 0;
 	sf::Clock clock;
 
 	Player susa(Susa, 0, 0, 32, 32,"susa");
@@ -225,44 +225,44 @@ int main()
 			}
 		}
 
-		/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		{
-			susa.direction = 1;
-			susa.speed = 0.1;
+			//susa.direction = 1;
+			//susa.speed = 0.1;
 			CurrentFrame += 0.005 * time;
 			if (CurrentFrame > 4)
 			{
 				CurrentFrame -= 4;
 			}
-			susa.sprite.setTextureRect(sf::IntRect(32 * int(CurrentFrame), 66, 32, 32));
-			getplayercoordinateforview(susa.getplayercoordinateX(), susa.getplayercoordinateY());
+			susa.sprite.setTextureRect(sf::IntRect(32 * int(CurrentFrame), 66, 33, 32));
+			//getplayercoordinateforview(susa.getplayercoordinateX(), susa.getplayercoordinateY());
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		{
-			susa.direction = 0;
-			susa.speed = 0.1;
+			//susa.direction = 0;
+			//susa.speed = 0.1;
 			CurrentFrame += 0.005 * time;
 			if (CurrentFrame > 4)
 			{
 				CurrentFrame -= 4;
 			}
 			susa.sprite.setTextureRect(sf::IntRect(32 * int(CurrentFrame), 98, 32, 32));
-			getplayercoordinateforview(susa.getplayercoordinateX(), susa.getplayercoordinateY());
+			//getplayercoordinateforview(susa.getplayercoordinateX(), susa.getplayercoordinateY());
 		}
 
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && (sf::Keyboard::isKeyPressed(sf::Keyboard::A))))
 		{
-			susa.direction = 1;
-			susa.speed = 0.1;
+			//susa.direction = 1;
+			//susa.speed = 0.1;
 			CurrentFrame += 0.005 * time;
 			if (CurrentFrame > 4)
 			{
 				CurrentFrame -= 4;
 			}
 			susa.sprite.setTextureRect(sf::IntRect(32 * int(CurrentFrame), 131, 32, 32));
-			getplayercoordinateforview(susa.getplayercoordinateX(), susa.getplayercoordinateY());
-		}*/
+			//getplayercoordinateforview(susa.getplayercoordinateX(), susa.getplayercoordinateY());
+		}
 
 		/*if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || (sf::Keyboard::isKeyPressed(sf::Keyboard::W))))
 		{
