@@ -116,7 +116,7 @@ public:
 		}
 		else
 		{
-			for (int i = 0; i < n_n; i++)
+			for (int i = 0; i < m_n; i++)
 			{
 				for (int j = 0; j < m_m; j++)
 				{
