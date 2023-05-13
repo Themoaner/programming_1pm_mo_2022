@@ -1,9 +1,9 @@
 //Реализуйте шаблонный класс для описания матриц(в частном случае, векторов).Предусмотрите 3 шаблонных параметра : тип элемента, размеры матрицы N и M(N, M <= 3)
-//1.	Конструктор копирования
-//2.	Оператор присваивания копированием
-//3.	Оператор ввода и вывода
-//4.	Операторы + , +=, *, *=
-//5.	Оператор++, который увеличивает все элементы матрицы на 1
+//1.+	Конструктор копирования
+//2.+	Оператор присваивания копированием
+//3.+	Оператор ввода и вывода
+//4.+	Операторы + , +=, *, *=
+//5.+	Оператор++, который увеличивает все элементы матрицы на 1
 //6.	Метод вычисления определителя
 //7.	Метод или оператор для получения и изменения элемента матрицы по индексу
 
@@ -61,7 +61,7 @@ public:
 	//2. Конструктор копирования
 	Matrix(const Matrix& other)
 	{
-		std::cout << "Copy constructor";
+		std::cout << "Copy constructor" << std::endl;
 		m_n = other.m_n;
 		m_m = other.m_m;
 		for (int i = 0; i < N; i++)
@@ -127,6 +127,20 @@ public:
 		return *this;
 	}
 
+	//Оператор++, который увеличивает все элементы матрицы на 1
+	Matrix& operator++()
+	{
+		std::cout << "Operator++" << std::endl;
+		for (int i = 0; i < m_n; i++)
+		{
+			for (int j = 0; j < m_m; j++)
+			{
+				m_matrix[i][j] += 1;
+			}
+		}
+		return *this;
+	}
+
 	//Оператор *
 	template<typename I, int P, int Q>
 	Matrix operator*(Matrix<I,P,Q>& other)
@@ -151,8 +165,7 @@ public:
 				}
 			}
 			return result;
-		}
-		
+		}	
 	}
 
 	T getter(int i, int j) {
@@ -160,23 +173,83 @@ public:
 	}
 	
 	//Оператор *=
-
-
-
-
-
-	void Print() const
+	template<typename I, int P, int Q>
+	Matrix operator*=(Matrix<I, P, Q>& other)
 	{
-		for (int i = 0; i < m_n; i++)
+		std::cout << "Operator *= " << std::endl;
+
+		if (M != P)
 		{
-			for (int j = 0; j < m_m; j++)
+			std::cout << "The number of columns of the first matrix must match the number of rows of the second matrix" << std::endl;
+		}
+		else
+		{
+			Matrix result(N, Q);
+			for (int i = 0; i < N; i++)
 			{
-				std::cout << m_matrix[i][j] << " ";
+				for (int j = 0; j < Q; j++)
+				{
+					for (int k = 0; k < M; k++)
+					{
+						result.m_matrix[i][j] += m_matrix[i][k] * other.getter(k, j);
+					}
+				}
+			}
+
+			m_m = Q;
+			for (int i = 0; i < m_n; i++)
+			{
+				for (int j = 0; j < m_m; j++)
+				{
+					m_matrix[i][j] = result.m_matrix[i][j];
+				}
+			}
+			return *this;
+		}
+	}
+
+	//Метод вычисления определителя
+	Matrix Minor(int a)
+	{
+		Matrix result(N - 1, M - 1);
+		for (int i = 0; i < N - 1; i++)
+		{
+			for (int j = 0; j < M - 1; j++)
+			{
+				if (j < a)
+				{
+					result.m_matrix[i][j] = m_matrix[i][j + 1];
+				}
+				else
+				{
+					result.m_matrix[i][j] = m_matrix[i + 1][j + 1];
+				}
+			}
+		}
+		for (int i = 0; i < N - 1; i++)
+		{
+			for (int j = 0; j < M - 1; j++)
+			{
+				std::cout << result.m_matrix[i][j] << " ";
 			}
 			std::cout << std::endl;
 		}
-		
+		return result;
 	}
+
+
+	//void Print() const
+	//{
+	//	for (int i = 0; i < m_n; i++)
+	//	{
+	//		for (int j = 0; j < m_m; j++)
+	//		{
+	//			std::cout << m_matrix[i][j] << " ";
+	//		}
+	//		std::cout << std::endl;
+	//	}
+	//	
+	//}
 
 	friend std::ostream& operator<<(std::ostream& out, const Matrix& m)
 	{
@@ -210,16 +283,18 @@ int main()
 
 	Matrix<int, 2, 2> m1;
 	Matrix<int, 2, 1> m2;
+	Matrix<int, 3, 3> m3;
 	Matrix<int, 2, 2> Sum;
 	
 	//m1.Print();
-	std::cin >> m1;
-	std::cin >> m2;
-	Sum = m1 * m2;
-	std::cout << Sum;
-
-
-
+	//std::cin >> m1;
+	//std::cin >> m2;
+	std::cin >> m3;
+	m3.Minor(3);
+	//Sum = m1 * m2;
+	//std::cout << Sum;
+	//m1 *= m2;
+	//std::cout << m1;
 
 
 	system("pause");
