@@ -37,7 +37,7 @@ public:
 		//char* dt = ctime(&now);
 		if (m_logLevel == LogLevel::DEBUG)
 		{
-			std::cerr << /*dt <<*/ msg << std::endl;
+			std::cerr << msg << std::endl;
 		}
 		m_out << /*dt <<*/ msg << std::endl;
 		m_out.flush();
