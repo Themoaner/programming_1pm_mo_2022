@@ -4,7 +4,7 @@
 int main()
 {
 	Log::SetLogPath("log.txt");
-	Log::SetLogLevel(LogLevel::RELEASE);
+	Log::SetLogLevel(LogLevel::DEBUG);
 
 	Log::INFO("abcd");
 	Log::Write("efg");
