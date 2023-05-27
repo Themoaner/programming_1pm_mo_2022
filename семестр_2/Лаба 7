@@ -1,0 +1,138 @@
+#include <iostream>
+#include <vector>
+
+enum class Color
+{
+	GREEN,
+	RED
+};
+
+struct Point
+{
+	double x, y;
+};
+
+class Figure
+{
+protected:
+	Color m_color;
+	std::vector<Point> m_points;
+
+public:
+	Figure(Color color, std::vector<Point> points)
+	{
+		m_color = color;
+		m_points = points;
+	}
+
+
+	virtual double square()
+	{
+		std::cout << "Square = " << std::endl;
+		return 0;
+	}
+
+};
+
+class triangle : public Figure
+{
+public:
+	triangle(Color color, std::vector<Point> points) : Figure(color, points)
+	{
+		std::cout << "constructor triangle" << std::endl;
+	}
+
+	double square() override
+	{
+		double square = 0.5 * abs((m_points[1].x - m_points[0].x)*(m_points[2].y - m_points[0].y) - (m_points[2].x - m_points[0].x)*(m_points[1].y - m_points[0].y));
+		return square;
+	}
+};
+
+class recangle : public Figure
+{
+private:
+	bool correct = false;
+	double d_1, d_2;
+
+public:
+	recangle(Color color, std::vector<Point> points) : Figure(color, points)
+	{
+		std::cout << "constructor recangle" << std::endl;
+		double k_1 = (m_points[1].y - m_points[0].y) / (m_points[1].x - m_points[0].x);
+		double k_2 = (m_points[2].y - m_points[1].y) / (m_points[2].x - m_points[1].x);
+		double k_3 = (m_points[3].y - m_points[2].y) / (m_points[3].x - m_points[2].x);
+		double k_4 = (m_points[0].y - m_points[3].y) / (m_points[0].x - m_points[3].x);
+
+		d_1 = sqrt(pow(m_points[1].y - m_points[0].y, 2) + pow(m_points[1].x - m_points[0].x, 2));
+		d_2 = sqrt(pow(m_points[2].y - m_points[1].y, 2) + pow(m_points[2].x - m_points[1].x, 2));
+		double d_3 = sqrt(pow(m_points[3].y - m_points[2].y, 2) + pow(m_points[3].x - m_points[2].x, 2));
+		double d_4 = sqrt(pow(m_points[0].y - m_points[3].y, 2) + pow(m_points[0].x - m_points[3].x, 2));
+
+		std::cout << k_1 << "\n" << k_2 << "\n" << k_3 << "\n" << k_4 << "\n\n";
+		std::cout << d_1 << "\n" << d_2 << "\n" << d_3 << "\n" << d_4 << "\n\n";
+		std::cout << k_1*k_2 << "\n\n";
+
+		if ((k_1 == k_3) && (k_2 == k_4) && (d_1 == d_3) && (d_2 == d_4) && (k_1*k_2 == -1))
+			correct = true;
+	}
+
+	double square() override
+	{
+		if (correct) return d_1*d_2;
+		return -1;
+	}
+};
+
+class circle : public Figure
+{
+public:
+	circle(Color color, std::vector<Point> points) : Figure(color, points)
+	{
+		std::cout << "circle triangle" << std::endl;
+	}
+
+	double square() override
+	{
+		double R_x = m_points[1].x - m_points[0].x;
+		double R_y = m_points[1].y - m_points[0].y;
+		double R = sqrt(pow(R_x, 2) + pow(R_y, 2));
+		double square = 3.14 * pow(R, 2);
+		return square;
+	}
+};
+
+int main() {
+	std::vector<Point> t_p;
+	Point a, b, c;
+	a.x = 1.0;
+	a.y = 2.0;
+	b.x = 3.0;
+	b.y = 4.0;
+	c.x = 5.0;
+	c.y = 6.0;
+	t_p.push_back(a);
+	t_p.push_back(b);
+	t_p.push_back(c);
+	triangle t1(Color::RED, t_p);
+	t1.square();
+
+	std::vector<Point> r_p;
+	Point d;
+	a.x = 3.0;
+	a.y = 1.0;
+	b.x = 6.0;
+	b.y = 4.0;
+	c.x = 5.0;
+	c.y = 5.0;
+	d.x = 2.0;
+	d.y = 2.0;
+	r_p.push_back(a);
+	r_p.push_back(b);
+	r_p.push_back(c);
+	r_p.push_back(d);
+	recangle r1(Color::GREEN, r_p);
+	std::cout<<r1.square();
+
+	system("pause");
+}
