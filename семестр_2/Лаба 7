@@ -36,6 +36,13 @@ public:
 
 class triangle : public Figure
 {
+private:
+
+	double mabs(double a) {
+		if (a < 0) return -a;
+		return a;
+	}
+
 public:
 	triangle(Color color, std::vector<Point> points) : Figure(color, points)
 	{
@@ -44,7 +51,7 @@ public:
 
 	double square() override
 	{
-		double square = 0.5 * abs((m_points[1].x - m_points[0].x)*(m_points[2].y - m_points[0].y) - (m_points[2].x - m_points[0].x)*(m_points[1].y - m_points[0].y));
+		double square = mabs((m_points[1].x - m_points[0].x)*(m_points[2].y - m_points[0].y) - (m_points[2].x - m_points[0].x)*(m_points[1].y - m_points[0].y))/2.0;
 		return square;
 	}
 };
@@ -105,34 +112,44 @@ public:
 int main() {
 	std::vector<Point> t_p;
 	Point a, b, c;
-	a.x = 1.0;
-	a.y = 2.0;
-	b.x = 3.0;
-	b.y = 4.0;
-	c.x = 5.0;
-	c.y = 6.0;
+	a.x = 0.0;
+	a.y = 0.0;
+	b.x = 1.0;
+	b.y = 0.0;
+	c.x = 1.0;
+	c.y = 3.0;
 	t_p.push_back(a);
 	t_p.push_back(b);
 	t_p.push_back(c);
 	triangle t1(Color::RED, t_p);
-	t1.square();
+	std::cout << t1.square();
 
-	std::vector<Point> r_p;
-	Point d;
-	a.x = 3.0;
-	a.y = 1.0;
-	b.x = 6.0;
-	b.y = 4.0;
-	c.x = 5.0;
-	c.y = 5.0;
-	d.x = 2.0;
-	d.y = 2.0;
-	r_p.push_back(a);
-	r_p.push_back(b);
-	r_p.push_back(c);
-	r_p.push_back(d);
-	recangle r1(Color::GREEN, r_p);
-	std::cout<<r1.square();
+	//std::vector<Point> r_p;
+	//Point d;
+	//a.x = 3.0;
+	//a.y = 1.0;
+	//b.x = 6.0;
+	//b.y = 4.0;
+	//c.x = 5.0;
+	//c.y = 5.0;
+	//d.x = 2.0;
+	//d.y = 2.0;
+	//r_p.push_back(a);
+	//r_p.push_back(b);
+	//r_p.push_back(c);
+	//r_p.push_back(d);
+	//recangle r1(Color::GREEN, r_p);
+	//std::cout << r1.square();
+
+	std::vector<Point> c_p;
+	a.x = 0.0;
+	a.y = 0.0;
+	b.x = 1.0;
+	b.y = 0.0;
+	c_p.push_back(a);
+	c_p.push_back(b);
+	circle c1(Color::RED, c_p);
+	std::cout << c1.square();
 
 	system("pause");
 }
