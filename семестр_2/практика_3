@@ -1,6 +1,6 @@
 #include <iostream>
 
-double PI = 3.14;
+double PI = 3.1415926535;
 
 class KinematicSolver
 {
@@ -27,11 +27,6 @@ private:
 		if ((m_L1 == NULL) || (m_L2 == NULL))
 		{
 			std::cout << "incorrect length" << std::endl;
-			return 1;
-		}
-		if (m_x == NULL || m_y == NULL)
-		{
-			std::cout << "incorrect m(x,y)" << std::endl;
 			return 1;
 		}
 
@@ -72,7 +67,8 @@ public:
 
 	void getAlphaBeta() const
 	{
-		std::cout << (180 * m_alpha) / PI << " " << (180 * m_beta) / PI << std::endl;
+		//std::cout << (180 * m_alpha) / PI << " " << (180 * m_beta) / PI << std::endl;
+		std::cout << m_alpha << std::endl << m_beta;
 	}
 };
 
@@ -80,6 +76,7 @@ public:
 int main()
 {
 	KinematicSolver a;
+	a.getAlphaBeta();
 	
 	system("pause");
 }
