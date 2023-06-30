@@ -76,6 +76,9 @@ namespace m {
         case 's':
             map_sprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
             break;
+        case 'S':
+            map_sprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
+            break;
         case 'q':
             map_sprite.setTextureRect(sf::IntRect(0, 64, 64, 128));
             break;
