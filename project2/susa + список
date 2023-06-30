@@ -1,0 +1,378 @@
+#include <SFML/Graphics.hpp>
+#include "Header.h"
+//#include <iostream>
+#include <list>
+
+class Entity
+{
+public:
+	float x, y, dx, dy, speed; //координаты игрока х и у, ускорение (по х и по у), скорость
+	int w, h; //высота и ширина
+	bool isMove, onGround; //состояния нахождения на земле
+	sf::String name;
+	sf::Texture texture;
+	sf::Sprite sprite;
+
+	Entity (sf::Image& image, float X, float Y, int W, int H, sf::String Name)
+	{
+		x = X; y = Y; w = W; h = H; name = Name;
+		speed = 0; dx = 0; dy = 0;
+		onGround = false; isMove = false;
+		texture.loadFromImage(image);
+		sprite.setTexture(texture);
+		sprite.setOrigin(w / 2, h / 2);
+	}
+
+	sf::FloatRect getRect() {
+		return sf::FloatRect(x, y, w, h);
+	}
+
+	virtual void update(float time) = 0; //все потомки переопределяют эту функцию
+};
+
+class Enemy : public Entity
+{
+public:
+	float moveTimer = 0;
+
+	Enemy(sf::Image& image, float X, float Y, int W, int H, sf::String Name) : Entity(image, X, Y, W, H, Name)
+	{
+		if (name == "clip")
+		{
+			sprite.setTextureRect(sf::IntRect(0, 0, w, h));
+			dx = -0.08; //постоянная скорость скрепки
+		}
+
+		if (name == "puddle")
+		{
+			sprite.setTextureRect(sf::IntRect(289, 230, w, h));
+		}
+	}
+
+	void checkCollisionWithMap(float Dx, float Dy)
+	{
+		for (int i = y / 32; i < (y + h) / 32; i++)
+		{
+			for (int j = x / 32; j < (x + w) / 32; j++)
+			{
+				if (TileMap[i][j] == 'g')
+				{
+					if (Dy > 0)
+					{
+						y = i * 32 - h;
+					}
+					if (Dy < 0)
+					{
+						y = i * 32 + 32;
+					}
+					if (Dx > 0)
+					{
+						x = j * 32 - w;
+						dx = -0.08;
+						sprite.scale(-1, 1);
+					}
+					if (Dx < 0)
+					{
+						x = j * 32 + 32;
+						dx = 0.08;
+						sprite.scale(-1, 1);
+					}
+				}
+			}
+		}
+	}
+
+	void update(float time) //функция "оживления" объекта класса. update - обновление. принимает в себя время SFML , вследствие чего работает бесконечно, давая персонажу движение.
+	{
+		if (name == "clip")
+		{
+			moveTimer += time;
+
+			if (moveTimer > 1000)
+			{
+				dx *= -1;
+				sprite.scale(-1, 1);
+				moveTimer = 0;
+			}
+
+			checkCollisionWithMap(dx, 0);
+			x += dx * time; //наше ускорение на время получаем смещение координат и как следствие движение
+			sprite.setPosition(x + w / 2, y + h / 2); //выводим спрайт в позицию (x + w / 2, y + h / 2). бесконечно выводим в этой функции, иначе бы наш спрайт стоял на месте.
+		}
+
+		if (name == "puddle")
+		{
+			sprite.setPosition(x + w / 2, y + h / 2); //выводим спрайт в позицию (x + w / 2, y + h / 2). бесконечно выводим в этой функции, иначе бы наш спрайт стоял на месте.
+		}
+	}
+};
+
+class Player: public Entity
+{
+public:
+	bool life = true; //переменная жизни
+
+	enum {left, right, up, doun, jump, stay} state; // пречисление состояния персонажа
+
+	Player(sf::Image &image, float X, float Y, int W, int H, sf::String Name):Entity(image, X, Y, W, H, Name)
+	{
+		state = stay;
+		if(name == "susa")
+		{
+			sprite.setTextureRect(sf::IntRect(0, 0, w, h));
+		}
+		sprite.setOrigin(w/2, h/2);
+	}
+
+	void control()
+	{
+		if (life == true)
+		{
+			if (sf::Keyboard::isKeyPressed)
+			{
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+				{
+					state = left;
+					speed = 0.1;
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+				{
+					state = right;
+					speed = 0.1;
+				}
+
+				if ((sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::A)))
+				{
+					state = left;
+					speed = 0.2;
+				}
+
+				if ((sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::D)))
+				{
+					state = right;
+					speed = 0.2;
+				}
+
+				if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (onGround))
+				{
+					state = jump;
+					dy = -0.4;
+					onGround = false;
+				}
+			}
+		}
+	}
+	
+	void checkCollisionWithMap(float Dx, float Dy)
+	{
+		for (int i = y / 32; i < (y + h) / 32; i++) //проходимся по тайликам, контактирующим с игроком, т.е. по всем квадратикам размера 32*32
+		{
+			for (int j = x / 32; j < (x + w) / 32; j++) //икс делим на 32, тем самым получаем левый квадратик, с которым персонаж соприкасается. (он ведь больше размера 32*32, поэтому может одновременно стоять на нескольких квадратах). а j < (x + w) / 32 - условие ограничения координат по иксу. т.е. координата самого правого квадрата, который соприкасается с персонажем. таким образом идем в цикле слева направо по иксу, проходя от левого квадрата (соприкасающегося с героем), до правого квадрата (соприкасающегося с героем)
+			{
+				if (TileMap[i][j] == 'g')
+				{
+					if (Dy > 0) //если мы шли вниз
+					{
+						y = i * 32 - h;  //стопорим координату у персонажа. сначала получаем координату нашего квадратика на карте и затем вычитаем из высоты спрайта персонажа.
+						dy = 0;
+						onGround = true; //В этот момент надо вытолкнуть персонажа и поставить его на землю, при этом говорим что мы на земле тем самым снова можем прыгать
+					}
+					if (Dy < 0) //если мы шли вверх
+					{
+						y = i * 32 + 32;
+						dy = 0;
+					}
+					if (Dx > 0) //если мы шли вправо
+					{
+						x = j * 32 - w; //координата Х равна (символ g) минус ширина персонажа
+					}
+					if (Dx < 0) //если шли влево
+					{
+						x = j * 32 + 32;
+					}
+				}
+			}
+		}
+	}
+
+	void update(float time) //функция "оживления" объекта класса. update - обновление. принимает в себя время SFML , вследствие чего работает бесконечно, давая персонажу движение.
+	{
+		control();
+		switch (state) //различные действия в зависимости от состояния
+		{
+		case right: dx = speed; break;
+		case left: dx = -speed; break;
+		case jump: break;
+		case stay: break;
+		}
+
+		x += dx * time; //наше ускорение на время получаем смещение координат и как следствие движение
+		checkCollisionWithMap(dx, 0); //обрабатываем столкновиние по Х
+		y += dy * time; //аналогично
+		checkCollisionWithMap(0, dy); //обрабатываем столкновение по Y
+		sprite.setPosition(x + w / 2, y + h / 2); //задаём позицию спрайта в место его центра. бесконечно выводим в этой функции, иначе бы наш спрайт стоял на месте.
+		if (!isMove)
+		{
+			speed = 0;
+		}
+		dy = dy + 0.0015 * time; //притяжение к земле
+
+		if (life == false)
+		{
+			speed = 0;
+		}
+	}
+};
+
+
+int main()
+{
+	sf::RenderWindow window(sf::VideoMode(1000, 600), "test");
+	sf::View view(sf::FloatRect(0.f, 0.f, 1000.f, 600.f));
+	//view.reset(sf::FloatRect(0, 0, 1000, 600));
+	//view.zoom(0.5f);
+	
+
+	sf::Image mapImage;
+	mapImage.loadFromFile("images/fon2.png");
+	sf::Texture map;
+	map.loadFromImage(mapImage);
+	sf::Sprite s_map;
+	s_map.setTexture(map);
+
+	sf::Image Susa;
+	Susa.loadFromFile("images/susa4.png");
+
+	sf::Image Clip;
+	Clip.loadFromFile("images/clip2.png");
+
+	sf::Image Puddle;
+	Puddle.loadFromFile("images/other.png");
+
+	float CurrentFrame = 0; //хранит текущий кадр
+	sf::Clock clock;
+
+	Player susa(Susa, 0, 0, 32, 32, "susa");
+
+	///////////////////////// СПИСОК ВРАГОВ /////////////////////////
+
+	std::list<Entity*>  L;           //список
+	std::list<Entity*>::iterator ii; //итератор чтобы проходить по эл-там списка
+
+	L.push_back(new Enemy(Clip, 480, 384, 32, 32, "clip"));
+	L.push_back(new Enemy(Puddle, 250, 406, 14, 10, "puddle"));
+
+	///////////////////////// СПИСОК ВРАГОВ /////////////////////////
+
+
+	while (window.isOpen())
+	{
+		float time = clock.getElapsedTime().asMicroseconds(); //дать прошедшее время в микросекундах
+		clock.restart();   //перезагружает время
+		time = time / 800; //скорость игры
+
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				window.close();
+			}
+		}
+
+		////////////////    АНИМАЦИЯ    ////////////////
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		{
+			CurrentFrame += 0.005 * time;
+			if (CurrentFrame > 4)
+			{
+				CurrentFrame -= 4;
+			}
+			susa.sprite.setTextureRect(sf::IntRect(32 * int(CurrentFrame), 64, 32, 32));
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		{
+			CurrentFrame += 0.005 * time;
+			if (CurrentFrame > 4)
+			{
+				CurrentFrame -= 4;
+			}
+			susa.sprite.setTextureRect(sf::IntRect(32 * int(CurrentFrame), 96, 32, 32));
+		}
+
+		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::A)))
+		{
+			CurrentFrame += 0.005 * time;
+			if (CurrentFrame > 4)
+			{
+				CurrentFrame -= 4;
+			}
+			susa.sprite.setTextureRect(sf::IntRect(32 * int(CurrentFrame), 128, 32, 32));
+		}
+
+		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::D)))
+		{
+			CurrentFrame += 0.005 * time;
+			if (CurrentFrame > 4)
+			{
+				CurrentFrame -= 4;
+			}
+			susa.sprite.setTextureRect(sf::IntRect(32 * int(CurrentFrame), 160, 32, 32));
+		}
+
+		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		//{
+		//	CurrentFrame += 0.07 * time;
+		//	if (CurrentFrame > 5)
+		//	{
+		//		CurrentFrame -= 5;
+		//	}
+		//	susa.sprite.setTextureRect(sf::IntRect(32 * int(CurrentFrame), 192, 32, 32));
+		//}
+		////////////////    АНИМАЦИЯ    ////////////////
+
+
+		//////////////////// СТОЛКНОВЕНИЕ С ВРАГОМ ////////////////////
+		
+		for (ii = L.begin(); ii != L.end(); ii++)
+		{
+			if ((**ii).getRect().intersects(susa.getRect())) //если враг пересекается с игроком
+				{
+					susa.life = false; //персонаж умирает
+				}
+		}
+
+		//////////////////// СТОЛКНОВЕНИЕ С ВРАГОМ ////////////////////
+
+
+		for (ii = L.begin(); ii != L.end(); ii++)
+		{
+			(*ii)->update(time); //для всех элементов списка активируем ф-цию update
+		}
+		susa.update(time);
+		window.setView(view);
+		window.clear();
+
+		for (int i = 0; i < HEIGHT_MAP; i++)
+		{
+			for (int j = 0; j < WIDTH_MAP; j++)
+			{
+				if (TileMap[i][j] == 'w')
+					s_map.setTextureRect(sf::IntRect(0, 0, 32, 32));
+				if (TileMap[i][j] == 'g')
+					s_map.setTextureRect(sf::IntRect(300, 0, 32, 32));
+				s_map.setPosition(j * 32, i * 32);
+				window.draw(s_map);
+			}
+		}
+
+
+		for (ii = L.begin(); ii != L.end(); ii++) {
+			window.draw((*ii)->sprite); //рисуем объекты списка L
+ 		}
+		window.draw(susa.sprite);
+		window.display();
+	}
+	return 0;
+}
