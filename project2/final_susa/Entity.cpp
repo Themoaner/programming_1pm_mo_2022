@@ -103,12 +103,24 @@ void Player::control(float* CurrentFrame, float time, sf::View* view) {
 }
 
 ////////////////////ВЗАИМОДЕЙСТВИЕ С КАРТОЙ/////////////
-void Player::checkCollisionWithMap(float Dx, float Dy) {
+void Player::checkCollisionWithMap(float Dx, float Dy, float time) {
     for (int i = y / 32; i < (y + h) / 32; i++) {
         for (int j = x / 32; j < (x + w) / 32; j++) {
             switch (map[i][j]) {
             case 's':
                 Stopper(Dx, Dy, i, j);
+                break;
+            case 'S':
+                Stopper(Dx, Dy, i, j);
+                
+                if (count == 2)
+                {
+                    sp_flag = true;
+                    map[i][j] = 's';
+                }
+                else
+                    an_sp_flag = true;
+                
                 break;
             case 'b':
                 Stopper(Dx, Dy, i, j);
@@ -186,24 +198,40 @@ void Player::checkCollisionWithMap(float Dx, float Dy) {
     }
 }
 
+void Player::Spider(float time)
+{
+    deathTimer += time;
+    if (deathTimer > 2500)
+    {
+        if (an_sp_flag == true)
+            life = false;
+
+        sp_flag = false;
+        an_sp_flag = false;
+        deathTimer = 0;
+    }
+}
+
 void Player::revival(float time)
 {
-    /*if (deathTimer.getElapsedTime().asMicroseconds() > 2000)
-    {
-        x = 300 - 16;
-        y = 500;
-        sprite.setPosition(x, y);
-        life = true;
-        dy = -0.4;
-    }*/
-
     deathTimer += time;
+    
+    if (deathTimer > 200)
+    {
+        flag = true;
+    }
+
     if (deathTimer > 2500) {
         x = 300 - 16;
         y = 500;
         sprite.setPosition(x, y);
-        life = true;
         dy = -0.4;
+    }
+
+    if (deathTimer > 2550)
+    {
+        life = true;
+        flag = false;
         deathTimer = 0;
     }
 }
@@ -226,9 +254,9 @@ void Player::update(float time, float* CurrentFrame, float t, sf::View* view) {
     }
 
     x += dx * time; //наше ускорение на время получаем смещение координат и как следствие движение
-    checkCollisionWithMap(dx, 0); //обрабатываем столкновиние по Х
+    checkCollisionWithMap(dx, 0, time); //обрабатываем столкновиние по Х
     y += dy * time; //аналогично
-    checkCollisionWithMap(0, dy); //обрабатываем столкновение по Y
+    checkCollisionWithMap(0, dy, time); //обрабатываем столкновение по Y
     //std::cout << " Susa  x: " << x << " y: " << y<< " dy: " << dy << std::endl;
     view->setCenter(x + 30, y);
     sprite.setPosition(x + w / 2, y + h / 2); //задаём позицию спрайта в место его центра. бесконечно выводим в этой функции, иначе бы наш спрайт стоял на месте.
@@ -241,6 +269,9 @@ void Player::update(float time, float* CurrentFrame, float t, sf::View* view) {
         dy = 0;
         revival(time);
     }
+
+    if (sp_flag == true || an_sp_flag == true)
+        Spider(time);
 }
 
 float Player::getplayercoordinateX() {
