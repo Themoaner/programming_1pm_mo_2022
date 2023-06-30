@@ -43,6 +43,11 @@ public:
 			sprite.setTextureRect(sf::IntRect(0, 0, w, h));
 			dx = -0.08; //постоянная скорость скрепки
 		}
+
+		if (name == "puddle")
+		{
+			sprite.setTextureRect(sf::IntRect(288, 230, w, h));
+		}
 	}
 
 	void checkCollisionWithMap(float Dx, float Dy)
@@ -93,6 +98,11 @@ public:
 
 			checkCollisionWithMap(dx, 0);
 			x += dx * time; //наше ускорение на время получаем смещение координат и как следствие движение
+			sprite.setPosition(x + w / 2, y + h / 2); //выводим спрайт в позицию (x + w / 2, y + h / 2). бесконечно выводим в этой функции, иначе бы наш спрайт стоял на месте.
+		}
+
+		if (name == "puddle")
+		{
 			sprite.setPosition(x + w / 2, y + h / 2); //выводим спрайт в позицию (x + w / 2, y + h / 2). бесконечно выводим в этой функции, иначе бы наш спрайт стоял на месте.
 		}
 	}
@@ -237,11 +247,15 @@ int main()
 	sf::Image Clip;
 	Clip.loadFromFile("images/clip2.png");
 
+	sf::Image Puddle;
+	Puddle.loadFromFile("images/other.png");
+
 	float CurrentFrame = 0; //хранит текущий кадр
 	sf::Clock clock;
 
-	Player susa(Susa, 0, 0, 32, 32,"susa");
+	Player susa(Susa, 0, 0, 32, 32, "susa");
 	Enemy clip(Clip, 480, 384, 32, 32, "clip");
+	Enemy puddle(Puddle, 250, 406, 16, 10, "puddle");
 
 	while (window.isOpen())
 	{
@@ -304,10 +318,16 @@ int main()
 		{
 			susa.life = false; //персонаж умирает
 		}
+
+		if (puddle.getRect().intersects(susa.getRect())) //если лужа пересекается с игроком
+		{
+			susa.life = false; //персонаж умирает
+		}
 		///////////////////
 
 		susa.update(time);
 		clip.update(time);
+		puddle.update(time);
 		window.setView(view);
 		window.clear();
 
@@ -326,6 +346,7 @@ int main()
 
 		window.draw(susa.sprite);
 		window.draw(clip.sprite);
+		window.draw(puddle.sprite);
 		window.display();
 	}
 	return 0;
