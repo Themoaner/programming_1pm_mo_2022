@@ -30,8 +30,10 @@ private:
     float deathTimer = 0;
 
 public:
-    bool life = true; //переменная жизни
-
+    bool life = true;     //переменная жизни
+    bool flag = false;    //для смерти
+    bool sp_flag = false; //для паука
+    bool an_sp_flag = false;
     enum { left, right, up, doun, jump, stay } state;  // пречисление состояния персонажа
 
     Player(sf::Image& image, float X, float Y, int W, int H, sf::String Name);
@@ -39,7 +41,9 @@ public:
     ///////////////////////АНИМАЦИЯ///////////////////////////////
     void control(float* CurrentFrame, float time, sf::View* view);
 
-    void checkCollisionWithMap(float Dx, float Dy);
+    void checkCollisionWithMap(float Dx, float Dy, float time);
+
+    void Spider(float time);
 
     void revival(float time);
 
