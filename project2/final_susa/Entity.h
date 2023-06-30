@@ -27,6 +27,7 @@ private:
     int count = 0; //счетчик букв
 
     void Stopper(float Dx, float Dy, int i, int j);
+    float deathTimer = 0;
 
 public:
     bool life = true; //переменная жизни
@@ -39,6 +40,8 @@ public:
     void control(float* CurrentFrame, float time, sf::View* view);
 
     void checkCollisionWithMap(float Dx, float Dy);
+
+    void revival(float time);
 
     void update(float time, float* CurrentFrame, float t, sf::View* view);
 
