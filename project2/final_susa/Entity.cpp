@@ -186,6 +186,28 @@ void Player::checkCollisionWithMap(float Dx, float Dy) {
     }
 }
 
+void Player::revival(float time)
+{
+    /*if (deathTimer.getElapsedTime().asMicroseconds() > 2000)
+    {
+        x = 300 - 16;
+        y = 500;
+        sprite.setPosition(x, y);
+        life = true;
+        dy = -0.4;
+    }*/
+
+    deathTimer += time;
+    if (deathTimer > 2500) {
+        x = 300 - 16;
+        y = 500;
+        sprite.setPosition(x, y);
+        life = true;
+        dy = -0.4;
+        deathTimer = 0;
+    }
+}
+
 /////////////////////////////ДВИЖЕНИЕ/////////////////////////////////////////
 void Player::update(float time, float* CurrentFrame, float t, sf::View* view) {
     control(CurrentFrame, t, view);
@@ -209,8 +231,7 @@ void Player::update(float time, float* CurrentFrame, float t, sf::View* view) {
     checkCollisionWithMap(0, dy); //обрабатываем столкновение по Y
     //std::cout << " Susa  x: " << x << " y: " << y<< " dy: " << dy << std::endl;
     view->setCenter(x + 30, y);
-    sprite.setPosition(x + w / 2, y + h /
-        2); //задаём позицию спрайта в место его центра. бесконечно выводим в этой функции, иначе бы наш спрайт стоял на месте.
+    sprite.setPosition(x + w / 2, y + h / 2); //задаём позицию спрайта в место его центра. бесконечно выводим в этой функции, иначе бы наш спрайт стоял на месте.
     if (!isMove) {
         speed = 0;
     }
@@ -218,6 +239,7 @@ void Player::update(float time, float* CurrentFrame, float t, sf::View* view) {
     if (life == false) {
         speed = 0;
         dy = 0;
+        revival(time);
     }
 }
 
