@@ -32,8 +32,8 @@ namespace mt {
 
         sf::Image Susa;
         Susa.loadFromFile("files/susa4.png");
-        //Player susa(Susa, 300 - 16, 500, 32, 32, "susa");
-        Player susa(Susa, 88*32 , 8*32, 32, 32,"susa");
+        Player susa(Susa, 300 - 16, 500, 32, 32, "susa");
+        //Player susa(Susa, 88*32 , 8*32, 32, 32,"susa");
         susa.SetMap(map.GetMassive());
 
         sf::Image Clip;
@@ -60,6 +60,27 @@ namespace mt {
         L.push_back(new Enemy(Puddle, 115 * 32, 3 * 32 - 10, 14, 10, "puddle"));
         L.push_back(new Enemy(Puddle, 120 * 32, 3 * 32 - 10, 14, 10, "puddle"));
         ///////////////////////// СПИСОК ВРАГОВ /////////////////////////
+
+        sf::Texture texture_death;
+        if (!texture_death.loadFromFile("files/death8.jpg")) // Загружаем изображение из файла
+        {
+            std::cout << "Failed to load image!" << std::endl;
+        }
+        sf::Sprite sprite_death(texture_death); // Создаем спрайт с используемой текстурой
+
+        sf::Texture texture_kindSpider;
+        if (!texture_kindSpider.loadFromFile("files/ks2.jpg")) // Загружаем изображение из файла
+        {
+            std::cout << "Failed to load image!" << std::endl;
+        }
+        sf::Sprite sprite_kindSpider(texture_kindSpider); // Создаем спрайт с используемой текстурой
+
+        sf::Texture texture_angrySpider;
+        if (!texture_angrySpider.loadFromFile("files/as2.jpg")) // Загружаем изображение из файла
+        {
+            std::cout << "Failed to load image!" << std::endl;
+        }
+        sf::Sprite sprite_angrySpider(texture_angrySpider); // Создаем спрайт с используемой текстурой
 
         while (m_window->isOpen()) {
             sf::Event event;
@@ -104,6 +125,23 @@ namespace mt {
             }
             //m_window->draw(*clip1.GetSprite());
             //m_window->draw(*clip2.GetSprite());
+
+            if (susa.flag == true)
+            {
+                sprite_death.setPosition(susa.getplayercoordinateX() - 220, susa.getplayercoordinateY() - 130);
+                m_window->draw(sprite_death); // Отображаем спрайт в окне
+            }
+            if (susa.sp_flag == true)
+            {
+                sprite_kindSpider.setPosition(susa.getplayercoordinateX() - 185, susa.getplayercoordinateY() - 120);
+                m_window->draw(sprite_kindSpider); // Отображаем спрайт в окне
+            }
+            if (susa.an_sp_flag == true)
+            {
+                sprite_angrySpider.setPosition(susa.getplayercoordinateX() - 185, susa.getplayercoordinateY() - 120);
+                m_window->draw(sprite_angrySpider); // Отображаем спрайт в окне
+            }
+
             m_window->display();
         }
 
